@@ -16,7 +16,7 @@
             padding: 20px;
         }
         .nav-card {
-            max-width: 900px;
+            max-width: 960px;
             width: 100%;
             background: rgba(255, 255, 255, 0.72);
             backdrop-filter: blur(18px);
@@ -58,6 +58,47 @@
         .url-row .input-group .btn { background: linear-gradient(135deg, #1e7a5a, #2a9d7a); box-shadow: 0 4px 12px rgba(30,122,90,0.18); }
         .url-row .input-group .btn:hover { background: linear-gradient(135deg, #166a4a, #208a6a); }
 
+        /* ===== 游戏容器 (iframe) ===== */
+        .game-container {
+            margin-top: 18px;
+            border-radius: 28px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            transition: height 0.3s ease, opacity 0.25s ease;
+            height: 0;
+            opacity: 0;
+            position: relative;
+        }
+        .game-container.active {
+            height: 500px;
+            opacity: 1;
+        }
+        .game-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            background: #fff;
+        }
+        .game-container .game-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #8aacbc;
+            font-size: 16px;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .game-container .game-placeholder .big-icon {
+            font-size: 48px;
+            opacity: 0.5;
+        }
+
         .footer-hint { margin-top: 22px; text-align: center; font-size: 13px; color: #6a8a9a; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 18px; }
         .footer-hint kbd { background: rgba(0,0,0,0.04); padding: 1px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; color: #2a5a6a; border: 1px solid rgba(0,0,0,0.04); font-family: inherit; }
         .footer-hint .sep { color: #b0ccd8; }
@@ -73,10 +114,12 @@
             .input-group .btn { flex: 1 1 100%; justify-content: center; padding: 14px; border-radius: 60px; }
             .hot-tags { gap: 6px 10px; }
             .hot-tag { font-size: 13px; padding: 3px 12px; }
+            .game-container.active { height: 380px; }
         }
         @media (max-width: 420px) {
             .nav-card { padding: 18px 10px 16px; border-radius: 24px; }
             .logo { font-size: 19px; }
+            .game-container.active { height: 300px; }
         }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .nav-card { animation: fadeUp 0.5s ease-out; }
@@ -112,6 +155,16 @@
         <div class="hot-tags" id="hotTags"></div>
     </div>
 
+    <!-- ===== 游戏容器（内嵌显示） ===== -->
+    <div class="game-container" id="gameContainer">
+        <div class="game-placeholder" id="gamePlaceholder">
+            <span class="big-icon">🎮</span>
+            <span>点击上方游戏标签，在这里开始玩</span>
+            <span style="font-size:13px; opacity:0.6;">支持内嵌显示，无需跳转</span>
+        </div>
+        <iframe id="gameIframe" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy"></iframe>
+    </div>
+
     <div class="url-row">
         <form id="urlForm" class="input-group">
             <span class="icon">🔗</span>
@@ -131,16 +184,30 @@
     (function() {
         'use strict';
 
-        // ===== 配置：您的游戏页面 URL =====
-        // 请将下面的链接替换为您自己制作的游戏页面的实际地址
-        const GAME_URL = 'https://your-game-page.com/'; // ← 替换这里
+        // ===== 配置：您的游戏文件列表（存放在仓库根目录） =====
+        // 格式：显示名称 => 文件名（需与实际文件名完全一致，注意大小写）
+        const GAMES = {
+            '🐣 苟活之重生': '苟活之重生.html',
+            '🎯 几何冲刺 (1)': '几何冲刺_ (5) (1) .html',
+            '🎯 几何冲刺 (2)': '几何冲刺_ (5)  (2) .html',
+            '🎰 抽奖机': '抽奖机 (不要赌博)_ (2) (1) .html',
+            '🧩 Scratch作品1': 'Scratch_ (1) _ (1) (1).html',
+            '🧩 Scratch作品2': '作品_ (3) .html'
+        };
 
+        // 如果您游戏文件不在根目录，请修改基础URL，例如：'https://nav.yang.636.ltd/game/'
+        const BASE_URL = 'https://nav.yang.636.ltd/';  // 使用自定义域名，注意末尾斜杠
+
+        // 获取DOM元素
         const engineSelect = document.getElementById('engineSelect');
         const searchForm = document.getElementById('searchForm');
         const searchInput = document.getElementById('searchInput');
         const urlForm = document.getElementById('urlForm');
         const urlInput = document.getElementById('urlInput');
         const hotTags = document.getElementById('hotTags');
+        const gameContainer = document.getElementById('gameContainer');
+        const gameIframe = document.getElementById('gameIframe');
+        const gamePlaceholder = document.getElementById('gamePlaceholder');
 
         // ===== 搜索引擎配置 =====
         const ENGINES = {
@@ -151,12 +218,17 @@
             '360':  'https://www.so.com/s?q='
         };
 
-        // ===== 热门词条（含游戏入口） =====
-        const HOT_ITEMS_MAP = {
-            // 游戏入口（单独放在最前面）
-            '🎮 游戏中心': GAME_URL,  // 点击直接跳转游戏页面
+        // ===== 热门词条（包含游戏标签 + 其他网站） =====
+        // 为了保持整洁，我们将游戏标签放在前面，其他网站紧随其后
+        const HOT_ITEMS_MAP = {};
 
-            // 原有网站
+        // 添加游戏标签（显示名称 -> 特殊标记，实际处理时通过GAMES映射）
+        Object.keys(GAMES).forEach(name => {
+            HOT_ITEMS_MAP[name] = '__GAME__' + name; // 用特殊前缀标识
+        });
+
+        // 添加其他网站
+        const SITES = {
             'CCTV1在线直播': 'https://tv.cctv.com/live/cctv1/',
             'CCTV2财经': 'https://tv.cctv.com/live/cctv2/',
             'CCTV3综艺': 'https://tv.cctv.com/live/cctv3/',
@@ -178,8 +250,58 @@
             '直播中国': 'https://livechina.cctv.com/',
             '央博': 'https://yangbo.cctv.com/',
         };
+        Object.keys(SITES).forEach(key => {
+            HOT_ITEMS_MAP[key] = SITES[key];
+        });
 
         const HOT_ITEMS = Object.keys(HOT_ITEMS_MAP);
+
+        // ===== 显示游戏 =====
+        function showGame(gameName) {
+            const fileName = GAMES[gameName];
+            if (!fileName) return;
+            const gameUrl = BASE_URL + encodeURIComponent(fileName);
+            // 显示容器，隐藏占位
+            gameContainer.classList.add('active');
+            gamePlaceholder.style.display = 'none';
+            gameIframe.src = gameUrl;
+        }
+
+        // ===== 处理点击 =====
+        function handleHotItem(text) {
+            const value = HOT_ITEMS_MAP[text];
+            if (!value) return;
+
+            // 检查是否为游戏标记
+            if (typeof value === 'string' && value.startsWith('__GAME__')) {
+                const gameName = value.replace('__GAME__', '');
+                showGame(gameName);
+                return;
+            }
+
+            // 否则作为普通网站，新标签打开
+            if (value) {
+                window.open(value, '_blank');
+            }
+        }
+
+        // ===== 渲染热门标签 =====
+        function renderHotTags() {
+            const fragment = document.createDocumentFragment();
+            HOT_ITEMS.forEach(item => {
+                const span = document.createElement('span');
+                span.className = 'hot-tag';
+                // 如果是游戏标签，添加特殊样式
+                const value = HOT_ITEMS_MAP[item];
+                if (typeof value === 'string' && value.startsWith('__GAME__')) {
+                    span.classList.add('game-tag');
+                }
+                span.textContent = item;
+                span.dataset.keyword = item;
+                fragment.appendChild(span);
+            });
+            hotTags.appendChild(fragment);
+        }
 
         // ===== 搜索函数 =====
         function performSearch(query) {
@@ -188,33 +310,6 @@
             if (!engine) return;
             const url = engine + encodeURIComponent(query.trim());
             window.open(url, '_blank');
-        }
-
-        // ===== 处理点击 =====
-        function handleHotItem(text) {
-            const url = HOT_ITEMS_MAP[text];
-            if (url) {
-                window.open(url, '_blank');
-            } else {
-                performSearch(text);
-            }
-        }
-
-        // ===== 渲染热门标签（给游戏标签添加特殊类） =====
-        function renderHotTags() {
-            const fragment = document.createDocumentFragment();
-            HOT_ITEMS.forEach(item => {
-                const span = document.createElement('span');
-                span.className = 'hot-tag';
-                // 如果是游戏入口，添加特殊样式
-                if (item === '🎮 游戏中心') {
-                    span.classList.add('game-tag');
-                }
-                span.textContent = item;
-                span.dataset.keyword = item;
-                fragment.appendChild(span);
-            });
-            hotTags.appendChild(fragment);
         }
 
         // ===== 事件监听 =====
@@ -298,7 +393,7 @@
                 searchInput.focus();
             }
         }, 200);
-        console.log('🚀 StartHere 已启动，游戏入口已添加');
+        console.log('🚀 StartHere 已启动，支持6款游戏内嵌切换');
     })();
 </script>
 </body>
