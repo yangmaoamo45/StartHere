@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StartHere · 智能导航</title>
+    <title>StartHere · 智能导航 + 游戏中心</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -48,56 +48,109 @@
         .hot-tag { background: rgba(255,255,255,0.7); padding: 4px 16px; border-radius: 30px; font-size: 14px; color: #0b2b3b; border: 1px solid rgba(0,0,0,0.04); cursor: pointer; transition: all 0.2s; user-select: none; white-space: nowrap; }
         .hot-tag:hover { background: #fff; border-color: #0078d4; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,120,212,0.08); }
         .hot-tag:active { transform: scale(0.95); }
-        /* 游戏标签特殊样式 */
-        .hot-tag.game-tag { background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff; border-color: #f5576c; }
-        .hot-tag.game-tag:hover { background: linear-gradient(135deg, #e07ae8, #e0455a); border-color: #e0455a; }
+
+        /* ===== 游戏中心样式 ===== */
+        .game-center {
+            margin: 16px 0 10px;
+            padding: 10px 14px 12px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .game-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-bottom: 10px;
+        }
+        .game-header .title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #3a5a6a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .game-toggle-btn {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            border: none;
+            color: #fff;
+            padding: 6px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 10px rgba(245, 87, 108, 0.2);
+        }
+        .game-toggle-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 16px rgba(245, 87, 108, 0.35);
+        }
+        .game-toggle-btn:active { transform: scale(0.95); }
+
+        .game-grid {
+            display: none;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0 12px;
+        }
+        .game-grid.active {
+            display: flex;
+        }
+        .game-item {
+            background: rgba(255,255,255,0.7);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            color: #0b2b3b;
+            border: 1px solid rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+        }
+        .game-item:hover {
+            background: #fff;
+            border-color: #f5576c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(245, 87, 108, 0.12);
+        }
+        .game-item.active-game {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: #fff;
+            border-color: #f5576c;
+        }
+
+        .game-iframe-wrapper {
+            display: none;
+            margin-top: 12px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.3);
+            height: 0;
+            transition: height 0.3s ease;
+        }
+        .game-iframe-wrapper.active {
+            display: block;
+            height: 500px;
+        }
+        .game-iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
 
         .url-row { margin-top: 12px; padding: 0 6px; }
         .url-row .input-group { border-color: rgba(100,120,130,0.10); padding-left: 18px; }
         .url-row .input-group:focus-within { border-color: #2c7a5a; box-shadow: 0 4px 16px rgba(44,122,90,0.08); }
         .url-row .input-group .btn { background: linear-gradient(135deg, #1e7a5a, #2a9d7a); box-shadow: 0 4px 12px rgba(30,122,90,0.18); }
         .url-row .input-group .btn:hover { background: linear-gradient(135deg, #166a4a, #208a6a); }
-
-        /* ===== 游戏容器 (iframe) ===== */
-        .game-container {
-            margin-top: 18px;
-            border-radius: 28px;
-            overflow: hidden;
-            background: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,255,255,0.4);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-            transition: height 0.3s ease, opacity 0.25s ease;
-            height: 0;
-            opacity: 0;
-            position: relative;
-        }
-        .game-container.active {
-            height: 500px;
-            opacity: 1;
-        }
-        .game-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-            background: #fff;
-        }
-        .game-container .game-placeholder {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #8aacbc;
-            font-size: 16px;
-            flex-direction: column;
-            gap: 10px;
-            padding: 20px;
-            text-align: center;
-        }
-        .game-container .game-placeholder .big-icon {
-            font-size: 48px;
-            opacity: 0.5;
-        }
 
         .footer-hint { margin-top: 22px; text-align: center; font-size: 13px; color: #6a8a9a; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 18px; }
         .footer-hint kbd { background: rgba(0,0,0,0.04); padding: 1px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; color: #2a5a6a; border: 1px solid rgba(0,0,0,0.04); font-family: inherit; }
@@ -112,14 +165,12 @@
             .input-group input { background: rgba(255,255,255,0.85); border-radius: 60px; padding: 14px 20px; border: 2px solid rgba(0,120,212,0.10); flex: 1 1 100%; font-size: 15px; }
             .input-group .icon { display: none; }
             .input-group .btn { flex: 1 1 100%; justify-content: center; padding: 14px; border-radius: 60px; }
-            .hot-tags { gap: 6px 10px; }
-            .hot-tag { font-size: 13px; padding: 3px 12px; }
-            .game-container.active { height: 380px; }
+            .game-iframe-wrapper.active { height: 380px; }
         }
         @media (max-width: 420px) {
             .nav-card { padding: 18px 10px 16px; border-radius: 24px; }
             .logo { font-size: 19px; }
-            .game-container.active { height: 300px; }
+            .game-iframe-wrapper.active { height: 300px; }
         }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .nav-card { animation: fadeUp 0.5s ease-out; }
@@ -127,8 +178,10 @@
 </head>
 <body>
 <div class="nav-card">
+
+    <!-- 头部 -->
     <div class="header">
-        <div class="logo">🧭 StartHere <span class="badge">导航</span></div>
+        <div class="logo">🧭 StartHere <span class="badge">导航+游戏</span></div>
         <div class="engine-selector">
             <label for="engineSelect">🔎</label>
             <select id="engineSelect">
@@ -138,10 +191,11 @@
                 <option value="sogou">🟠 搜狗 Sogou</option>
                 <option value="360">🟡 360搜索</option>
             </select>
-            <span class="engine-status">✅ 新标签页打开，稳定不卡</span>
+            <span class="engine-status">✅ 新标签页打开</span>
         </div>
     </div>
 
+    <!-- 搜索 -->
     <div class="search-area">
         <form id="searchForm" class="input-group">
             <span class="icon">🔍</span>
@@ -150,21 +204,25 @@
         </form>
     </div>
 
+    <!-- 猜你想搜 -->
     <div class="hot-section">
         <div class="hot-header"><span class="fire">🔥</span> 猜你想搜 · 热门直达</div>
         <div class="hot-tags" id="hotTags"></div>
     </div>
 
-    <!-- ===== 游戏容器（内嵌显示） ===== -->
-    <div class="game-container" id="gameContainer">
-        <div class="game-placeholder" id="gamePlaceholder">
-            <span class="big-icon">🎮</span>
-            <span>点击上方游戏标签，在这里开始玩</span>
-            <span style="font-size:13px; opacity:0.6;">支持内嵌显示，无需跳转</span>
+    <!-- ===== 游戏中心 ===== -->
+    <div class="game-center">
+        <div class="game-header">
+            <span class="title">🎮 游戏中心</span>
+            <button class="game-toggle-btn" id="gameToggleBtn">展开游戏列表</button>
         </div>
-        <iframe id="gameIframe" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy"></iframe>
+        <div class="game-grid" id="gameGrid"></div>
+        <div class="game-iframe-wrapper" id="gameIframeWrapper">
+            <iframe id="gameIframe" src="about:blank" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy"></iframe>
+        </div>
     </div>
 
+    <!-- URL 直达 -->
     <div class="url-row">
         <form id="urlForm" class="input-group">
             <span class="icon">🔗</span>
@@ -184,32 +242,33 @@
     (function() {
         'use strict';
 
-        // ===== 配置：您的游戏文件列表（存放在仓库根目录） =====
-        // 格式：显示名称 => 文件名（需与实际文件名完全一致，注意大小写）
-        const GAMES = {
-            '🐣 苟活之重生': '苟活之重生.html',
-            '🎯 几何冲刺 (1)': '几何冲刺_ (5) (1) .html',
-            '🎯 几何冲刺 (2)': '几何冲刺_ (5)  (2) .html',
-            '🎰 抽奖机': '抽奖机 (不要赌博)_ (2) (1) .html',
-            '🧩 Scratch作品1': 'Scratch_ (1) _ (1) (1).html',
-            '🧩 Scratch作品2': '作品_ (3) .html'
-        };
+        // ===== 游戏列表配置（根据您上传的文件名） =====
+        // 注意：文件名中的空格和特殊字符会由浏览器自动编码，无需手动转义
+        const GAMES = [
+            { name: 'Scratch 作品', file: 'Scratch_ (1) _ (1) (1).html' },
+            { name: '作品 (3)', file: '作品_ (3) .html' },
+            { name: '几何冲刺 (5) (1)', file: '几何冲刺_ (5) (1) .html' },
+            { name: '几何冲刺 (5) (2)', file: '几何冲刺_ (5)  (2) .html' },
+            { name: '抽奖机 (不要赌博)', file: '抽奖机 (不要赌博)_ (2) (1) .html' },
+            { name: '苟活之重生', file: '苟活之重生.html' }
+        ];
 
-        // 如果您游戏文件不在根目录，请修改基础URL，例如：'https://nav.yang.636.ltd/game/'
-        const BASE_URL = 'https://nav.yang.636.ltd/';  // 使用自定义域名，注意末尾斜杠
-
-        // 获取DOM元素
+        // ===== DOM 引用 =====
         const engineSelect = document.getElementById('engineSelect');
         const searchForm = document.getElementById('searchForm');
         const searchInput = document.getElementById('searchInput');
         const urlForm = document.getElementById('urlForm');
         const urlInput = document.getElementById('urlInput');
         const hotTags = document.getElementById('hotTags');
-        const gameContainer = document.getElementById('gameContainer');
+        const gameGrid = document.getElementById('gameGrid');
+        const gameToggleBtn = document.getElementById('gameToggleBtn');
+        const gameIframeWrapper = document.getElementById('gameIframeWrapper');
         const gameIframe = document.getElementById('gameIframe');
-        const gamePlaceholder = document.getElementById('gamePlaceholder');
 
-        // ===== 搜索引擎配置 =====
+        let isGameGridOpen = false;
+        let currentGameFile = '';
+
+        // ===== 搜索引擎 =====
         const ENGINES = {
             bing:   'https://www.bing.com/search?q=',
             baidu:  'https://www.baidu.com/s?wd=',
@@ -218,17 +277,8 @@
             '360':  'https://www.so.com/s?q='
         };
 
-        // ===== 热门词条（包含游戏标签 + 其他网站） =====
-        // 为了保持整洁，我们将游戏标签放在前面，其他网站紧随其后
-        const HOT_ITEMS_MAP = {};
-
-        // 添加游戏标签（显示名称 -> 特殊标记，实际处理时通过GAMES映射）
-        Object.keys(GAMES).forEach(name => {
-            HOT_ITEMS_MAP[name] = '__GAME__' + name; // 用特殊前缀标识
-        });
-
-        // 添加其他网站
-        const SITES = {
+        // ===== 热门词条 =====
+        const HOT_ITEMS_MAP = {
             'CCTV1在线直播': 'https://tv.cctv.com/live/cctv1/',
             'CCTV2财经': 'https://tv.cctv.com/live/cctv2/',
             'CCTV3综艺': 'https://tv.cctv.com/live/cctv3/',
@@ -250,38 +300,22 @@
             '直播中国': 'https://livechina.cctv.com/',
             '央博': 'https://yangbo.cctv.com/',
         };
-        Object.keys(SITES).forEach(key => {
-            HOT_ITEMS_MAP[key] = SITES[key];
-        });
-
         const HOT_ITEMS = Object.keys(HOT_ITEMS_MAP);
 
-        // ===== 显示游戏 =====
-        function showGame(gameName) {
-            const fileName = GAMES[gameName];
-            if (!fileName) return;
-            const gameUrl = BASE_URL + encodeURIComponent(fileName);
-            // 显示容器，隐藏占位
-            gameContainer.classList.add('active');
-            gamePlaceholder.style.display = 'none';
-            gameIframe.src = gameUrl;
+        // ===== 搜索 =====
+        function performSearch(query) {
+            if (!query || !query.trim()) { searchInput.focus(); return; }
+            const engine = ENGINES[engineSelect.value];
+            if (!engine) return;
+            window.open(engine + encodeURIComponent(query.trim()), '_blank');
         }
 
-        // ===== 处理点击 =====
         function handleHotItem(text) {
-            const value = HOT_ITEMS_MAP[text];
-            if (!value) return;
-
-            // 检查是否为游戏标记
-            if (typeof value === 'string' && value.startsWith('__GAME__')) {
-                const gameName = value.replace('__GAME__', '');
-                showGame(gameName);
-                return;
-            }
-
-            // 否则作为普通网站，新标签打开
-            if (value) {
-                window.open(value, '_blank');
+            const url = HOT_ITEMS_MAP[text];
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                performSearch(text);
             }
         }
 
@@ -291,11 +325,6 @@
             HOT_ITEMS.forEach(item => {
                 const span = document.createElement('span');
                 span.className = 'hot-tag';
-                // 如果是游戏标签，添加特殊样式
-                const value = HOT_ITEMS_MAP[item];
-                if (typeof value === 'string' && value.startsWith('__GAME__')) {
-                    span.classList.add('game-tag');
-                }
                 span.textContent = item;
                 span.dataset.keyword = item;
                 fragment.appendChild(span);
@@ -303,16 +332,6 @@
             hotTags.appendChild(fragment);
         }
 
-        // ===== 搜索函数 =====
-        function performSearch(query) {
-            if (!query || !query.trim()) { searchInput.focus(); return; }
-            const engine = ENGINES[engineSelect.value];
-            if (!engine) return;
-            const url = engine + encodeURIComponent(query.trim());
-            window.open(url, '_blank');
-        }
-
-        // ===== 事件监听 =====
         hotTags.addEventListener('click', function(e) {
             const tag = e.target.closest('.hot-tag');
             if (!tag) return;
@@ -320,6 +339,68 @@
             if (keyword) handleHotItem(keyword);
         });
 
+        // ===== 渲染游戏列表 =====
+        function renderGameGrid() {
+            const fragment = document.createDocumentFragment();
+            GAMES.forEach((game, index) => {
+                const div = document.createElement('div');
+                div.className = 'game-item';
+                div.textContent = game.name;
+                div.dataset.index = index;
+                div.dataset.file = game.file;
+                fragment.appendChild(div);
+            });
+            gameGrid.appendChild(fragment);
+        }
+
+        // ===== 加载游戏 =====
+        function loadGame(file) {
+            if (!file) return;
+            // 构建相对路径，游戏文件在 games 文件夹下
+            const gameUrl = './games/' + file;
+            gameIframe.src = gameUrl;
+            gameIframeWrapper.classList.add('active');
+            // 高亮当前选中的游戏
+            document.querySelectorAll('.game-item').forEach(el => {
+                el.classList.toggle('active-game', el.dataset.file === file);
+            });
+            currentGameFile = file;
+        }
+
+        // ===== 游戏列表点击事件（委托） =====
+        gameGrid.addEventListener('click', function(e) {
+            const item = e.target.closest('.game-item');
+            if (!item) return;
+            const file = item.dataset.file;
+            if (file) {
+                loadGame(file);
+                // 如果游戏列表未展开，自动展开
+                if (!isGameGridOpen) {
+                    toggleGameGrid(true);
+                }
+            }
+        });
+
+        // ===== 展开/收起游戏列表 =====
+        function toggleGameGrid(forceOpen) {
+            const willOpen = (forceOpen !== undefined) ? forceOpen : !isGameGridOpen;
+            if (willOpen) {
+                gameGrid.classList.add('active');
+                gameToggleBtn.textContent = '收起游戏列表';
+                isGameGridOpen = true;
+            } else {
+                gameGrid.classList.remove('active');
+                gameToggleBtn.textContent = '展开游戏列表';
+                isGameGridOpen = false;
+                // 如果 iframe 没有内容，可以保留，但不主动关闭
+            }
+        }
+
+        gameToggleBtn.addEventListener('click', function() {
+            toggleGameGrid();
+        });
+
+        // ===== 搜索表单 =====
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const query = searchInput.value.trim();
@@ -388,12 +469,20 @@
 
         // ===== 初始化 =====
         renderHotTags();
+        renderGameGrid();
+        // 默认加载第一个游戏（可选）
+        if (GAMES.length > 0) {
+            // 自动加载第一个游戏（非强制，用户也可手动点击）
+            // 这里我们不自动加载，让用户自己点击展开和选择
+        }
+
         setTimeout(() => {
             if (!document.activeElement || document.activeElement === document.body) {
                 searchInput.focus();
             }
         }, 200);
-        console.log('🚀 StartHere 已启动，支持6款游戏内嵌切换');
+
+        console.log('🎮 游戏中心已加载，共 ' + GAMES.length + ' 个游戏');
     })();
 </script>
 </body>
