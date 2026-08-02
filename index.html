@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>智能导航 · 热门网站 + 搜索</title>
+    <title>StartHere · 智能导航</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -48,6 +48,9 @@
         .hot-tag { background: rgba(255,255,255,0.7); padding: 4px 16px; border-radius: 30px; font-size: 14px; color: #0b2b3b; border: 1px solid rgba(0,0,0,0.04); cursor: pointer; transition: all 0.2s; user-select: none; white-space: nowrap; }
         .hot-tag:hover { background: #fff; border-color: #0078d4; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,120,212,0.08); }
         .hot-tag:active { transform: scale(0.95); }
+        /* 游戏标签特殊样式 */
+        .hot-tag.game-tag { background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff; border-color: #f5576c; }
+        .hot-tag.game-tag:hover { background: linear-gradient(135deg, #e07ae8, #e0455a); border-color: #e0455a; }
 
         .url-row { margin-top: 12px; padding: 0 6px; }
         .url-row .input-group { border-color: rgba(100,120,130,0.10); padding-left: 18px; }
@@ -82,11 +85,11 @@
 <body>
 <div class="nav-card">
     <div class="header">
-        <div class="logo">🧭 导航 <span class="badge">常用网站</span></div>
+        <div class="logo">🧭 StartHere <span class="badge">导航</span></div>
         <div class="engine-selector">
             <label for="engineSelect">🔎</label>
             <select id="engineSelect">
-                <option value="bing">🔵 必应 Bing</option>
+                <option value="bing" selected>🔵 必应 Bing</option>
                 <option value="baidu">🔴 百度 Baidu</option>
                 <option value="google">🟢 Google</option>
                 <option value="sogou">🟠 搜狗 Sogou</option>
@@ -128,6 +131,10 @@
     (function() {
         'use strict';
 
+        // ===== 配置：您的游戏页面 URL =====
+        // 请将下面的链接替换为您自己制作的游戏页面的实际地址
+        const GAME_URL = 'https://your-game-page.com/'; // ← 替换这里
+
         const engineSelect = document.getElementById('engineSelect');
         const searchForm = document.getElementById('searchForm');
         const searchInput = document.getElementById('searchInput');
@@ -137,18 +144,19 @@
 
         // ===== 搜索引擎配置 =====
         const ENGINES = {
-            duckduckgo: 'https://duckduckgo.com/?q=',
-            bing:       'https://www.bing.com/search?q=',
-            baidu:      'https://www.baidu.com/s?wd=',
-            google:     'https://www.google.com/search?q=',
-            sogou:      'https://www.sogou.com/web?query=',
-            '360':      'https://www.so.com/s?q='
+            bing:   'https://www.bing.com/search?q=',
+            baidu:  'https://www.baidu.com/s?wd=',
+            google: 'https://www.google.com/search?q=',
+            sogou:  'https://www.sogou.com/web?query=',
+            '360':  'https://www.so.com/s?q='
         };
 
-        // ===== 热门词条（整合图片中的网站 + 原有常用） =====
-        // 格式：显示名称 => URL（如果为 null 则表示使用搜索）
+        // ===== 热门词条（含游戏入口） =====
         const HOT_ITEMS_MAP = {
-            // 央视直播系列
+            // 游戏入口（单独放在最前面）
+            '🎮 游戏中心': GAME_URL,  // 点击直接跳转游戏页面
+
+            // 原有网站
             'CCTV1在线直播': 'https://tv.cctv.com/live/cctv1/',
             'CCTV2财经': 'https://tv.cctv.com/live/cctv2/',
             'CCTV3综艺': 'https://tv.cctv.com/live/cctv3/',
@@ -156,10 +164,8 @@
             'CCTV5体育': 'https://tv.cctv.com/live/cctv5/',
             'CCTV6电影': 'https://tv.cctv.com/live/cctv6/',
             'CCTV节目官网': 'https://cctv.com/',
-            // 政务教育
             '国家中小学智慧教育': 'https://basic.smartedu.cn/',
             '国家法律法规数据库': 'https://flk.npc.gov.cn/',
-            // 原有常用
             '百度一下': 'https://www.baidu.com',
             '哔哩哔哩': 'https://www.bilibili.com',
             '抖音': 'https://www.douyin.com',
@@ -169,15 +175,13 @@
             '爱奇艺': 'https://www.iqiyi.com',
             '网易云音乐': 'https://music.163.com',
             '汽车之家': 'https://www.autohome.com.cn',
-            // 其他
             '直播中国': 'https://livechina.cctv.com/',
             '央博': 'https://yangbo.cctv.com/',
         };
 
-        // 提取显示名称列表（用于渲染）
         const HOT_ITEMS = Object.keys(HOT_ITEMS_MAP);
 
-        // ===== 搜索（新标签） =====
+        // ===== 搜索函数 =====
         function performSearch(query) {
             if (!query || !query.trim()) { searchInput.focus(); return; }
             const engine = ENGINES[engineSelect.value];
@@ -196,12 +200,16 @@
             }
         }
 
-        // ===== 渲染热门 =====
+        // ===== 渲染热门标签（给游戏标签添加特殊类） =====
         function renderHotTags() {
             const fragment = document.createDocumentFragment();
             HOT_ITEMS.forEach(item => {
                 const span = document.createElement('span');
                 span.className = 'hot-tag';
+                // 如果是游戏入口，添加特殊样式
+                if (item === '🎮 游戏中心') {
+                    span.classList.add('game-tag');
+                }
                 span.textContent = item;
                 span.dataset.keyword = item;
                 fragment.appendChild(span);
@@ -209,6 +217,7 @@
             hotTags.appendChild(fragment);
         }
 
+        // ===== 事件监听 =====
         hotTags.addEventListener('click', function(e) {
             const tag = e.target.closest('.hot-tag');
             if (!tag) return;
@@ -216,7 +225,6 @@
             if (keyword) handleHotItem(keyword);
         });
 
-        // ===== 搜索表单 =====
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const query = searchInput.value.trim();
@@ -265,7 +273,7 @@
             urlInput.value = '';
         });
 
-        // ===== 键盘 =====
+        // ===== 键盘快捷键 =====
         document.addEventListener('keydown', function(e) {
             const tag = e.target.tagName.toLowerCase();
             if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
@@ -290,7 +298,7 @@
                 searchInput.focus();
             }
         }, 200);
-        console.log('🧭 热门网站导航已启动（全部新标签打开）');
+        console.log('🚀 StartHere 已启动，游戏入口已添加');
     })();
 </script>
 </body>
