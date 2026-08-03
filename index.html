@@ -3,19 +3,35 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StartHere · 智能导航 + 游戏 + AI</title>
+    <title>StartHere · 智能导航 + 搜索</title>
     <style>
-        /* 样式与之前完全相同，省略（请复制之前的完整样式） */
-        /* 为节省篇幅，此处仅保留关键样式，实际使用时请复制全量样式 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif; background: linear-gradient(145deg, #f0f6fc 0%, #dce8f0 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .nav-card { max-width: 960px; width: 100%; background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(18px); border-radius: 48px; padding: 36px 40px 32px; box-shadow: 0 30px 60px -12px rgba(0,30,50,0.25), 0 8px 24px -6px rgba(0,0,0,0.04), inset 0 1px 2px rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.5); }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
+            background: linear-gradient(145deg, #f0f6fc 0%, #dce8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .nav-card {
+            max-width: 960px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px);
+            border-radius: 48px;
+            padding: 36px 40px 32px;
+            box-shadow: 0 30px 60px -12px rgba(0,30,50,0.25), 0 8px 24px -6px rgba(0,0,0,0.04), inset 0 1px 2px rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
         .header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 24px; gap: 12px 16px; }
         .logo { display: flex; align-items: center; gap: 8px; font-size: 26px; font-weight: 600; color: #0b2b3b; }
         .logo .badge { background: linear-gradient(135deg, #0078d4, #00a3e0); color: #fff; font-size: 13px; padding: 2px 14px; border-radius: 40px; }
         .engine-selector { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.5); padding: 4px 4px 4px 16px; border-radius: 60px; border: 1px solid rgba(0,0,0,0.04); flex-wrap: wrap; }
         .engine-selector select { padding: 10px 18px 10px 14px; border: none; border-radius: 40px; background: rgba(255,255,255,0.8); font-size: 15px; font-weight: 500; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7a8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; min-width: 110px; }
         .engine-status { font-size: 13px; color: #4a7a8a; background: rgba(0,120,212,0.06); padding: 4px 14px; border-radius: 30px; border: 1px solid rgba(0,120,212,0.06); }
+
         .search-area { margin-bottom: 12px; }
         .input-group { display: flex; align-items: center; background: rgba(255,255,255,0.85); border-radius: 60px; padding: 4px 4px 4px 22px; border: 2px solid rgba(0,120,212,0.10); transition: border-color 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.02); }
         .input-group:focus-within { border-color: #0078d4; box-shadow: 0 4px 20px rgba(0,120,212,0.12); background: rgba(255,255,255,0.96); }
@@ -25,12 +41,94 @@
         .input-group .btn { background: linear-gradient(135deg, #0078d4, #0095e8); border: none; color: #fff; font-weight: 600; font-size: 15px; padding: 12px 28px; border-radius: 40px; cursor: pointer; transition: all 0.2s; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,120,212,0.22); flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
         .input-group .btn:hover { background: linear-gradient(135deg, #0067b8, #0086d0); transform: scale(1.02); }
         .input-group .btn:active { transform: scale(0.96); }
+
+        /* 搜索模式切换 */
+        .search-mode-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0 12px;
+            flex-wrap: wrap;
+        }
+        .search-mode-btn {
+            padding: 6px 18px;
+            border: none;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            background: rgba(255,255,255,0.5);
+            color: #4a6a7a;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+        }
+        .search-mode-btn:hover {
+            background: rgba(255,255,255,0.8);
+            transform: translateY(-1px);
+        }
+        .search-mode-btn.active {
+            background: #fff;
+            color: #0078d4;
+            box-shadow: 0 2px 10px rgba(0,120,212,0.08);
+        }
+        .search-mode-hint {
+            font-size: 13px;
+            color: #6a8a9a;
+            margin-left: 8px;
+        }
+
+        /* 站内搜索结果 */
+        .site-search-results {
+            display: none;
+            margin: 12px 0 6px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .site-search-results.active {
+            display: block;
+        }
+        .site-search-results .result-item {
+            padding: 6px 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            font-size: 14px;
+            color: #0b2b3b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .site-search-results .result-item:last-child {
+            border-bottom: none;
+        }
+        .site-search-results .result-item .tag {
+            background: rgba(0,120,212,0.08);
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #0078d4;
+        }
+        .site-search-results .result-item .url {
+            font-size: 12px;
+            color: #8aacbc;
+            word-break: break-all;
+        }
+        .site-search-results .no-result {
+            padding: 20px;
+            text-align: center;
+            color: #8aacbc;
+            font-size: 14px;
+        }
+
         .hot-section { margin: 16px 0 10px; padding: 10px 14px 12px; background: rgba(255,255,255,0.4); border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); }
         .hot-header { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #3a5a6a; margin-bottom: 8px; }
         .hot-tags { display: flex; flex-wrap: wrap; gap: 8px 12px; }
         .hot-tag { background: rgba(255,255,255,0.7); padding: 4px 16px; border-radius: 30px; font-size: 14px; color: #0b2b3b; border: 1px solid rgba(0,0,0,0.04); cursor: pointer; transition: all 0.2s; user-select: none; white-space: nowrap; }
         .hot-tag:hover { background: #fff; border-color: #0078d4; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,120,212,0.08); }
         .hot-tag:active { transform: scale(0.95); }
+
         .game-center { margin: 16px 0 10px; padding: 10px 14px 12px; background: rgba(255,255,255,0.4); border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); }
         .game-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 10px; }
         .game-header .title { font-size: 14px; font-weight: 500; color: #3a5a6a; display: flex; align-items: center; gap: 8px; }
@@ -45,6 +143,7 @@
         .game-iframe-wrapper { display: none; margin-top: 12px; border-radius: 20px; overflow: hidden; background: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.3); height: 0; transition: height 0.3s ease; }
         .game-iframe-wrapper.active { display: block; height: 500px; }
         .game-iframe-wrapper iframe { width: 100%; height: 100%; border: none; background: #fff; }
+
         .ai-assistant { margin: 16px 0 10px; padding: 10px 14px 12px; background: rgba(255,255,255,0.4); border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); }
         .ai-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 10px; }
         .ai-header .title { font-size: 14px; font-weight: 500; color: #3a5a6a; display: flex; align-items: center; gap: 8px; }
@@ -71,14 +170,17 @@
         .ai-model-select { margin-top: 8px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .ai-model-select label { font-size: 13px; color: #4a7a8a; }
         .ai-model-select select { padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.06); background: rgba(255,255,255,0.7); font-size: 13px; outline: none; cursor: pointer; }
+
         .url-row { margin-top: 12px; padding: 0 6px; }
         .url-row .input-group { border-color: rgba(100,120,130,0.10); padding-left: 18px; }
         .url-row .input-group:focus-within { border-color: #2c7a5a; box-shadow: 0 4px 16px rgba(44,122,90,0.08); }
         .url-row .input-group .btn { background: linear-gradient(135deg, #1e7a5a, #2a9d7a); box-shadow: 0 4px 12px rgba(30,122,90,0.18); }
         .url-row .input-group .btn:hover { background: linear-gradient(135deg, #166a4a, #208a6a); }
+
         .footer-hint { margin-top: 22px; text-align: center; font-size: 13px; color: #6a8a9a; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 18px; }
         .footer-hint kbd { background: rgba(0,0,0,0.04); padding: 1px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; color: #2a5a6a; border: 1px solid rgba(0,0,0,0.04); font-family: inherit; }
         .footer-hint .sep { color: #b0ccd8; }
+
         @media (max-width: 680px) {
             .nav-card { padding: 24px 16px 20px; border-radius: 32px; }
             .header { flex-direction: column; align-items: stretch; gap: 10px; }
@@ -90,6 +192,7 @@
             .input-group .btn { flex: 1 1 100%; justify-content: center; padding: 14px; border-radius: 60px; }
             .game-iframe-wrapper.active { height: 380px; }
             .ai-chat-box { max-height: 300px; }
+            .search-mode-bar { justify-content: center; }
         }
         @media (max-width: 420px) {
             .nav-card { padding: 18px 10px 16px; border-radius: 24px; }
@@ -104,7 +207,7 @@
 <div class="nav-card">
 
     <div class="header">
-        <div class="logo">🧭 StartHere <span class="badge">导航+游戏+AI</span></div>
+        <div class="logo">🧭 StartHere <span class="badge">搜索三合一</span></div>
         <div class="engine-selector">
             <label for="engineSelect">🔎</label>
             <select id="engineSelect">
@@ -118,19 +221,33 @@
         </div>
     </div>
 
+    <!-- 搜索区域 -->
     <div class="search-area">
         <form id="searchForm" class="input-group">
             <span class="icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="输入关键词，按 Enter 搜索" autocomplete="off" />
-            <button type="submit" class="btn"><span>搜索</span></button>
+            <input type="text" id="searchInput" placeholder="输入关键词..." autocomplete="off" />
+            <button type="submit" class="btn" id="searchBtn"><span>搜索</span></button>
         </form>
     </div>
 
+    <!-- 搜索模式切换 -->
+    <div class="search-mode-bar">
+        <button class="search-mode-btn active" data-mode="web" id="modeWeb">🌐 网页搜索</button>
+        <button class="search-mode-btn" data-mode="agg" id="modeAgg">📊 聚合搜索</button>
+        <button class="search-mode-btn" data-mode="site" id="modeSite">📁 站内搜索</button>
+        <span class="search-mode-hint" id="modeHint">输入关键词，跳转到搜索引擎</span>
+    </div>
+
+    <!-- 站内搜索结果容器 -->
+    <div class="site-search-results" id="siteResults"></div>
+
+    <!-- 猜你想搜 -->
     <div class="hot-section">
         <div class="hot-header"><span class="fire">🔥</span> 猜你想搜 · 热门直达</div>
         <div class="hot-tags" id="hotTags"></div>
     </div>
 
+    <!-- 游戏中心 -->
     <div class="game-center">
         <div class="game-header">
             <span class="title">🎮 游戏中心</span>
@@ -186,19 +303,14 @@
     (function() {
         'use strict';
 
-        // =======================================================================
-        // ⚙️ AI 配置（前端直连，仅限个人测试！）
-        // =======================================================================
+        // ===== 配置 =====
         const AI_CONFIG = {
             apiUrl: 'https://api-ai.7e.ink/v1/chat/completions',
-            apiKey: 'YOUR_API_KEY',   // ⬅️ 请填写您的真实密钥
+            apiKey: 'YOUR_API_KEY',   // 请替换为您的真实密钥
             defaultModel: 'deepseek-chat',
         };
 
-        // ⚠️ 警告：API Key 将暴露在网页源码中，请勿公开分享此页面！
-        // =======================================================================
-
-        // ===== 游戏列表 =====
+        // ===== 数据 =====
         const GAMES = [
             { name: 'Scratch 作品', file: 'Scratch_ (1) _ (1) (1).html' },
             { name: '作品 (3)', file: '作品_ (3) .html' },
@@ -208,38 +320,6 @@
             { name: '苟活之重生', file: '苟活之重生.html' }
         ];
 
-        // ===== DOM 引用 =====
-        const engineSelect = document.getElementById('engineSelect');
-        const searchForm = document.getElementById('searchForm');
-        const searchInput = document.getElementById('searchInput');
-        const urlForm = document.getElementById('urlForm');
-        const urlInput = document.getElementById('urlInput');
-        const hotTags = document.getElementById('hotTags');
-        const gameGrid = document.getElementById('gameGrid');
-        const gameToggleBtn = document.getElementById('gameToggleBtn');
-        const gameIframeWrapper = document.getElementById('gameIframeWrapper');
-        const gameIframe = document.getElementById('gameIframe');
-        const aiToggleBtn = document.getElementById('aiToggleBtn');
-        const aiChatBox = document.getElementById('aiChatBox');
-        const aiMessageContainer = document.getElementById('aiMessageContainer');
-        const aiInput = document.getElementById('aiInput');
-        const aiSendBtn = document.getElementById('aiSendBtn');
-        const aiModelSelect = document.getElementById('aiModelSelect');
-
-        let isGameGridOpen = false;
-        let isAiOpen = false;
-        let aiHistory = [];
-
-        // ===== 搜索引擎 =====
-        const ENGINES = {
-            bing:   'https://www.bing.com/search?q=',
-            baidu:  'https://www.baidu.com/s?wd=',
-            google: 'https://www.google.com/search?q=',
-            sogou:  'https://www.sogou.com/web?query=',
-            '360':  'https://www.so.com/s?q='
-        };
-
-        // ===== 热门词条 =====
         const HOT_ITEMS_MAP = {
             'CCTV1在线直播': 'https://tv.cctv.com/live/cctv1/',
             'CCTV2财经': 'https://tv.cctv.com/live/cctv2/',
@@ -264,21 +344,197 @@
         };
         const HOT_ITEMS = Object.keys(HOT_ITEMS_MAP);
 
-        // ===== 搜索 =====
-        function performSearch(query) {
-            if (!query || !query.trim()) { searchInput.focus(); return; }
-            const engine = ENGINES[engineSelect.value];
-            if (!engine) return;
-            window.open(engine + encodeURIComponent(query.trim()), '_blank');
+        // ===== 搜索引擎（用于网页搜索和聚合） =====
+        const ENGINES = {
+            bing:   { name: '必应', url: 'https://www.bing.com/search?q=' },
+            baidu:  { name: '百度', url: 'https://www.baidu.com/s?wd=' },
+            google: { name: 'Google', url: 'https://www.google.com/search?q=' },
+            sogou:  { name: '搜狗', url: 'https://www.sogou.com/web?query=' },
+            '360':  { name: '360搜索', url: 'https://www.so.com/s?q=' }
+        };
+
+        // ===== 当前状态 =====
+        let currentMode = 'web'; // 'web' | 'agg' | 'site'
+        let searchQuery = '';
+
+        // ===== DOM 引用 =====
+        const engineSelect = document.getElementById('engineSelect');
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const modeWeb = document.getElementById('modeWeb');
+        const modeAgg = document.getElementById('modeAgg');
+        const modeSite = document.getElementById('modeSite');
+        const modeHint = document.getElementById('modeHint');
+        const siteResults = document.getElementById('siteResults');
+        const hotTags = document.getElementById('hotTags');
+        const gameGrid = document.getElementById('gameGrid');
+        const gameToggleBtn = document.getElementById('gameToggleBtn');
+        const gameIframeWrapper = document.getElementById('gameIframeWrapper');
+        const gameIframe = document.getElementById('gameIframe');
+        const aiToggleBtn = document.getElementById('aiToggleBtn');
+        const aiChatBox = document.getElementById('aiChatBox');
+        const aiMessageContainer = document.getElementById('aiMessageContainer');
+        const aiInput = document.getElementById('aiInput');
+        const aiSendBtn = document.getElementById('aiSendBtn');
+        const aiModelSelect = document.getElementById('aiModelSelect');
+        const urlForm = document.getElementById('urlForm');
+        const urlInput = document.getElementById('urlInput');
+
+        let isGameGridOpen = false;
+        let isAiOpen = false;
+        let aiHistory = [];
+
+        // ===== 模式切换 =====
+        function setMode(mode) {
+            currentMode = mode;
+            // 更新按钮样式
+            [modeWeb, modeAgg, modeSite].forEach(btn => btn.classList.remove('active'));
+            if (mode === 'web') {
+                modeWeb.classList.add('active');
+                modeHint.textContent = '输入关键词，跳转到所选搜索引擎';
+            } else if (mode === 'agg') {
+                modeAgg.classList.add('active');
+                modeHint.textContent = '输入关键词，同时打开多个搜索引擎';
+            } else if (mode === 'site') {
+                modeSite.classList.add('active');
+                modeHint.textContent = '输入关键词，在站内搜索（游戏、热门链接）';
+                // 清空结果并聚焦
+                siteResults.innerHTML = '';
+                siteResults.classList.remove('active');
+                searchInput.focus();
+            }
+            // 清空搜索结果（如果是站内模式，重新搜索）
+            if (mode === 'site' && searchQuery) {
+                doSiteSearch(searchQuery);
+            } else {
+                siteResults.classList.remove('active');
+                siteResults.innerHTML = '';
+            }
         }
 
-        function handleHotItem(text) {
-            const url = HOT_ITEMS_MAP[text];
-            if (url) {
-                window.open(url, '_blank');
-            } else {
-                performSearch(text);
+        // ===== 执行搜索（根据当前模式） =====
+        function performSearch(query) {
+            if (!query || !query.trim()) { searchInput.focus(); return; }
+            const trimmed = query.trim();
+            searchQuery = trimmed;
+
+            if (currentMode === 'web') {
+                // 网页搜索：跳转到选中的引擎
+                const engineKey = engineSelect.value;
+                const engine = ENGINES[engineKey];
+                if (!engine) return;
+                window.open(engine.url + encodeURIComponent(trimmed), '_blank');
+            } else if (currentMode === 'agg') {
+                // 聚合搜索：同时打开多个引擎
+                const engineKeys = Object.keys(ENGINES);
+                // 排除当前选中的引擎（也可以全部打开，但建议只打开3-4个避免太多）
+                // 这里打开前三个常用引擎 + 当前选中的
+                const selected = new Set([engineSelect.value, 'bing', 'baidu', 'google']);
+                const targets = engineKeys.filter(k => selected.has(k));
+                targets.forEach(key => {
+                    const eng = ENGINES[key];
+                    if (eng) {
+                        window.open(eng.url + encodeURIComponent(trimmed), '_blank');
+                    }
+                });
+                // 提示用户
+                searchBtn.innerHTML = '<span>✓ 已打开多引擎</span>';
+                setTimeout(() => { searchBtn.innerHTML = '<span>搜索</span>'; }, 800);
+            } else if (currentMode === 'site') {
+                // 站内搜索
+                doSiteSearch(trimmed);
             }
+        }
+
+        // ===== 站内搜索逻辑 =====
+        function doSiteSearch(query) {
+            const results = [];
+            const lower = query.toLowerCase();
+
+            // 搜索热门词条
+            HOT_ITEMS.forEach(item => {
+                if (item.toLowerCase().includes(lower)) {
+                    results.push({
+                        type: '热门链接',
+                        name: item,
+                        url: HOT_ITEMS_MAP[item],
+                        match: item
+                    });
+                }
+            });
+
+            // 搜索游戏
+            GAMES.forEach(game => {
+                if (game.name.toLowerCase().includes(lower)) {
+                    results.push({
+                        type: '游戏',
+                        name: game.name,
+                        url: './games/' + game.file,
+                        match: game.name
+                    });
+                }
+            });
+
+            // 渲染结果
+            if (results.length === 0) {
+                siteResults.innerHTML = '<div class="no-result">😅 未找到相关内容，试试其他关键词</div>';
+            } else {
+                let html = '';
+                results.forEach((res, index) => {
+                    // 高亮匹配关键词
+                    let displayName = res.name;
+                    const idx = displayName.toLowerCase().indexOf(lower);
+                    if (idx !== -1) {
+                        const before = displayName.substring(0, idx);
+                        const match = displayName.substring(idx, idx + lower.length);
+                        const after = displayName.substring(idx + lower.length);
+                        displayName = before + '<strong style="color:#0078d4;">' + match + '</strong>' + after;
+                    }
+                    html += `
+                        <div class="result-item" data-url="${res.url}">
+                            <span>${displayName}</span>
+                            <span class="tag">${res.type}</span>
+                            <span class="url">${res.url}</span>
+                        </div>
+                    `;
+                });
+                siteResults.innerHTML = html;
+                // 点击结果跳转
+                siteResults.querySelectorAll('.result-item').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const url = this.dataset.url;
+                        if (url) {
+                            if (url.startsWith('http')) {
+                                window.open(url, '_blank');
+                            } else {
+                                // 相对路径，在当前窗口打开（游戏会加载到 iframe）
+                                // 如果是游戏，我们加载到游戏 iframe 中
+                                const isGame = this.querySelector('.tag')?.textContent === '游戏';
+                                if (isGame) {
+                                    loadGameFromUrl(url);
+                                    // 展开游戏中心
+                                    if (!isGameGridOpen) toggleGameGrid(true);
+                                } else {
+                                    window.open(url, '_blank');
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+            siteResults.classList.add('active');
+        }
+
+        // 辅助：从相对路径加载游戏到 iframe
+        function loadGameFromUrl(url) {
+            gameIframe.src = url;
+            gameIframeWrapper.classList.add('active');
+            // 高亮游戏列表中的对应项（如果有）
+            const fileName = url.split('/').pop();
+            document.querySelectorAll('.game-item').forEach(el => {
+                el.classList.toggle('active-game', el.dataset.file === fileName);
+            });
         }
 
         // ===== 渲染热门 =====
@@ -297,7 +553,17 @@
             const tag = e.target.closest('.hot-tag');
             if (!tag) return;
             const keyword = tag.dataset.keyword;
-            if (keyword) handleHotItem(keyword);
+            if (keyword) {
+                // 在站内搜索模式下，点击热门词条直接搜索
+                if (currentMode === 'site') {
+                    searchInput.value = keyword;
+                    performSearch(keyword);
+                } else {
+                    // 否则直接打开链接
+                    const url = HOT_ITEMS_MAP[keyword];
+                    if (url) window.open(url, '_blank');
+                }
+            }
         });
 
         // ===== 游戏渲染 =====
@@ -348,7 +614,7 @@
         }
         gameToggleBtn.addEventListener('click', function() { toggleGameGrid(); });
 
-        // ===== AI 助手逻辑（前端直连） =====
+        // ===== AI 助手（简化，保留直连） =====
         function addAIMessage(role, content) {
             const msgDiv = document.createElement('div');
             msgDiv.className = 'ai-message ' + role;
@@ -445,16 +711,25 @@
         }
         aiToggleBtn.addEventListener('click', function() { toggleAI(); });
 
-        // ===== 搜索表单 =====
+        // ===== 事件绑定 =====
+        // 搜索表单提交
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const query = searchInput.value.trim();
             if (!query) { searchInput.focus(); return; }
             performSearch(query);
-            searchInput.value = '';
+            // 如果是网页或聚合模式，不清空输入框（方便再次搜索）
+            if (currentMode === 'site') {
+                // 站内搜索后，输入框保留
+            }
         });
 
-        // ===== URL 直达 =====
+        // 模式切换按钮
+        modeWeb.addEventListener('click', function() { setMode('web'); });
+        modeAgg.addEventListener('click', function() { setMode('agg'); });
+        modeSite.addEventListener('click', function() { setMode('site'); });
+
+        // URL 直达
         function ensureProtocol(input) {
             let trimmed = input.trim();
             if (!trimmed) return null;
@@ -506,7 +781,7 @@
         });
 
         searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') { this.value = ''; this.blur(); }
+            if (e.key === 'Escape') { this.value = ''; this.blur(); siteResults.classList.remove('active'); }
         });
         urlInput.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') { this.value = ''; this.blur(); }
@@ -515,6 +790,7 @@
         // ===== 初始化 =====
         renderHotTags();
         renderGameGrid();
+        setMode('web');
 
         setTimeout(() => {
             if (!document.activeElement || document.activeElement === document.body) {
@@ -522,7 +798,7 @@
             }
         }, 200);
 
-        console.log('🚀 StartHere 已启动（前端直连 AI，仅限个人测试）');
+        console.log('🚀 StartHere 已启动，三种搜索模式已集成');
     })();
 </script>
 </body>
