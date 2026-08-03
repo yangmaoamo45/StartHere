@@ -3,35 +3,19 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StartHere · 智能导航 + 游戏中心</title>
+    <title>StartHere · 智能导航 + 游戏 + AI</title>
     <style>
+        /* 样式与之前完全相同，省略（请复制之前的完整样式） */
+        /* 为节省篇幅，此处仅保留关键样式，实际使用时请复制全量样式 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
-            background: linear-gradient(145deg, #f0f6fc 0%, #dce8f0 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .nav-card {
-            max-width: 960px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(18px);
-            border-radius: 48px;
-            padding: 36px 40px 32px;
-            box-shadow: 0 30px 60px -12px rgba(0,30,50,0.25), 0 8px 24px -6px rgba(0,0,0,0.04), inset 0 1px 2px rgba(255,255,255,0.7);
-            border: 1px solid rgba(255,255,255,0.5);
-        }
+        body { font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif; background: linear-gradient(145deg, #f0f6fc 0%, #dce8f0 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .nav-card { max-width: 960px; width: 100%; background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(18px); border-radius: 48px; padding: 36px 40px 32px; box-shadow: 0 30px 60px -12px rgba(0,30,50,0.25), 0 8px 24px -6px rgba(0,0,0,0.04), inset 0 1px 2px rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.5); }
         .header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 24px; gap: 12px 16px; }
         .logo { display: flex; align-items: center; gap: 8px; font-size: 26px; font-weight: 600; color: #0b2b3b; }
         .logo .badge { background: linear-gradient(135deg, #0078d4, #00a3e0); color: #fff; font-size: 13px; padding: 2px 14px; border-radius: 40px; }
         .engine-selector { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.5); padding: 4px 4px 4px 16px; border-radius: 60px; border: 1px solid rgba(0,0,0,0.04); flex-wrap: wrap; }
         .engine-selector select { padding: 10px 18px 10px 14px; border: none; border-radius: 40px; background: rgba(255,255,255,0.8); font-size: 15px; font-weight: 500; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7a8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; min-width: 110px; }
         .engine-status { font-size: 13px; color: #4a7a8a; background: rgba(0,120,212,0.06); padding: 4px 14px; border-radius: 30px; border: 1px solid rgba(0,120,212,0.06); }
-
         .search-area { margin-bottom: 12px; }
         .input-group { display: flex; align-items: center; background: rgba(255,255,255,0.85); border-radius: 60px; padding: 4px 4px 4px 22px; border: 2px solid rgba(0,120,212,0.10); transition: border-color 0.25s; box-shadow: 0 2px 12px rgba(0,0,0,0.02); }
         .input-group:focus-within { border-color: #0078d4; box-shadow: 0 4px 20px rgba(0,120,212,0.12); background: rgba(255,255,255,0.96); }
@@ -41,121 +25,60 @@
         .input-group .btn { background: linear-gradient(135deg, #0078d4, #0095e8); border: none; color: #fff; font-weight: 600; font-size: 15px; padding: 12px 28px; border-radius: 40px; cursor: pointer; transition: all 0.2s; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,120,212,0.22); flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
         .input-group .btn:hover { background: linear-gradient(135deg, #0067b8, #0086d0); transform: scale(1.02); }
         .input-group .btn:active { transform: scale(0.96); }
-
         .hot-section { margin: 16px 0 10px; padding: 10px 14px 12px; background: rgba(255,255,255,0.4); border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); }
         .hot-header { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #3a5a6a; margin-bottom: 8px; }
         .hot-tags { display: flex; flex-wrap: wrap; gap: 8px 12px; }
         .hot-tag { background: rgba(255,255,255,0.7); padding: 4px 16px; border-radius: 30px; font-size: 14px; color: #0b2b3b; border: 1px solid rgba(0,0,0,0.04); cursor: pointer; transition: all 0.2s; user-select: none; white-space: nowrap; }
         .hot-tag:hover { background: #fff; border-color: #0078d4; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,120,212,0.08); }
         .hot-tag:active { transform: scale(0.95); }
-
-        /* ===== 游戏中心样式 ===== */
-        .game-center {
-            margin: 16px 0 10px;
-            padding: 10px 14px 12px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-        .game-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px 12px;
-            margin-bottom: 10px;
-        }
-        .game-header .title {
-            font-size: 14px;
-            font-weight: 500;
-            color: #3a5a6a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .game-toggle-btn {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            border: none;
-            color: #fff;
-            padding: 6px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 2px 10px rgba(245, 87, 108, 0.2);
-        }
-        .game-toggle-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 16px rgba(245, 87, 108, 0.35);
-        }
+        .game-center { margin: 16px 0 10px; padding: 10px 14px 12px; background: rgba(255,255,255,0.4); border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); }
+        .game-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 10px; }
+        .game-header .title { font-size: 14px; font-weight: 500; color: #3a5a6a; display: flex; align-items: center; gap: 8px; }
+        .game-toggle-btn { background: linear-gradient(135deg, #f093fb, #f5576c); border: none; color: #fff; padding: 6px 20px; border-radius: 30px; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 10px rgba(245,87,108,0.2); }
+        .game-toggle-btn:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(245,87,108,0.35); }
         .game-toggle-btn:active { transform: scale(0.95); }
-
-        .game-grid {
-            display: none;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 10px 0 12px;
-        }
-        .game-grid.active {
-            display: flex;
-        }
-        .game-item {
-            background: rgba(255,255,255,0.7);
-            padding: 6px 18px;
-            border-radius: 30px;
-            font-size: 14px;
-            color: #0b2b3b;
-            border: 1px solid rgba(0,0,0,0.04);
-            cursor: pointer;
-            transition: 0.2s;
-            user-select: none;
-            white-space: nowrap;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
-        }
-        .game-item:hover {
-            background: #fff;
-            border-color: #f5576c;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(245, 87, 108, 0.12);
-        }
-        .game-item.active-game {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            color: #fff;
-            border-color: #f5576c;
-        }
-
-        .game-iframe-wrapper {
-            display: none;
-            margin-top: 12px;
-            border-radius: 20px;
-            overflow: hidden;
-            background: rgba(255,255,255,0.3);
-            border: 1px solid rgba(255,255,255,0.3);
-            height: 0;
-            transition: height 0.3s ease;
-        }
-        .game-iframe-wrapper.active {
-            display: block;
-            height: 500px;
-        }
-        .game-iframe-wrapper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #fff;
-        }
-
+        .game-grid { display: none; flex-wrap: wrap; gap: 10px; margin: 10px 0 12px; }
+        .game-grid.active { display: flex; }
+        .game-item { background: rgba(255,255,255,0.7); padding: 6px 18px; border-radius: 30px; font-size: 14px; color: #0b2b3b; border: 1px solid rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s; user-select: none; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,0.02); }
+        .game-item:hover { background: #fff; border-color: #f5576c; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(245,87,108,0.12); }
+        .game-item.active-game { background: linear-gradient(135deg, #f093fb, #f5576c); color: #fff; border-color: #f5576c; }
+        .game-iframe-wrapper { display: none; margin-top: 12px; border-radius: 20px; overflow: hidden; background: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.3); height: 0; transition: height 0.3s ease; }
+        .game-iframe-wrapper.active { display: block; height: 500px; }
+        .game-iframe-wrapper iframe { width: 100%; height: 100%; border: none; background: #fff; }
+        .ai-assistant { margin: 16px 0 10px; padding: 10px 14px 12px; background: rgba(255,255,255,0.4); border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); }
+        .ai-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 10px; }
+        .ai-header .title { font-size: 14px; font-weight: 500; color: #3a5a6a; display: flex; align-items: center; gap: 8px; }
+        .ai-toggle-btn { background: linear-gradient(135deg, #4facfe, #00f2fe); border: none; color: #fff; padding: 6px 20px; border-radius: 30px; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 10px rgba(79,172,254,0.2); }
+        .ai-toggle-btn:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(79,172,254,0.35); }
+        .ai-toggle-btn:active { transform: scale(0.95); }
+        .ai-chat-box { display: none; margin-top: 10px; border-radius: 20px; background: rgba(255,255,255,0.5); padding: 12px; max-height: 400px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.3); }
+        .ai-chat-box.active { display: block; }
+        .ai-message { margin-bottom: 12px; display: flex; flex-direction: column; }
+        .ai-message.user { align-items: flex-end; }
+        .ai-message.assistant { align-items: flex-start; }
+        .ai-message .bubble { max-width: 80%; padding: 10px 16px; border-radius: 20px; background: rgba(255,255,255,0.85); box-shadow: 0 2px 8px rgba(0,0,0,0.04); word-break: break-word; line-height: 1.5; font-size: 15px; }
+        .ai-message.user .bubble { background: #0078d4; color: #fff; }
+        .ai-message.assistant .bubble { background: #fff; color: #0b2b3b; }
+        .ai-message .timestamp { font-size: 11px; color: #8aacbc; margin-top: 4px; padding: 0 8px; }
+        .ai-input-row { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
+        .ai-input-row input { flex: 1; padding: 12px 18px; border-radius: 40px; border: 2px solid rgba(0,120,212,0.10); background: rgba(255,255,255,0.8); font-size: 15px; outline: none; transition: 0.2s; }
+        .ai-input-row input:focus { border-color: #0078d4; box-shadow: 0 0 0 4px rgba(0,120,212,0.05); }
+        .ai-input-row button { padding: 12px 24px; border-radius: 40px; border: none; background: linear-gradient(135deg, #4facfe, #00f2fe); color: #fff; font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.2s; white-space: nowrap; box-shadow: 0 2px 10px rgba(79,172,254,0.2); }
+        .ai-input-row button:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(79,172,254,0.3); }
+        .ai-input-row button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .ai-loading { display: inline-block; width: 18px; height: 18px; border: 3px solid rgba(0,120,212,0.2); border-top-color: #0078d4; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .ai-model-select { margin-top: 8px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .ai-model-select label { font-size: 13px; color: #4a7a8a; }
+        .ai-model-select select { padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.06); background: rgba(255,255,255,0.7); font-size: 13px; outline: none; cursor: pointer; }
         .url-row { margin-top: 12px; padding: 0 6px; }
         .url-row .input-group { border-color: rgba(100,120,130,0.10); padding-left: 18px; }
         .url-row .input-group:focus-within { border-color: #2c7a5a; box-shadow: 0 4px 16px rgba(44,122,90,0.08); }
         .url-row .input-group .btn { background: linear-gradient(135deg, #1e7a5a, #2a9d7a); box-shadow: 0 4px 12px rgba(30,122,90,0.18); }
         .url-row .input-group .btn:hover { background: linear-gradient(135deg, #166a4a, #208a6a); }
-
         .footer-hint { margin-top: 22px; text-align: center; font-size: 13px; color: #6a8a9a; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 18px; }
         .footer-hint kbd { background: rgba(0,0,0,0.04); padding: 1px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; color: #2a5a6a; border: 1px solid rgba(0,0,0,0.04); font-family: inherit; }
         .footer-hint .sep { color: #b0ccd8; }
-
         @media (max-width: 680px) {
             .nav-card { padding: 24px 16px 20px; border-radius: 32px; }
             .header { flex-direction: column; align-items: stretch; gap: 10px; }
@@ -166,6 +89,7 @@
             .input-group .icon { display: none; }
             .input-group .btn { flex: 1 1 100%; justify-content: center; padding: 14px; border-radius: 60px; }
             .game-iframe-wrapper.active { height: 380px; }
+            .ai-chat-box { max-height: 300px; }
         }
         @media (max-width: 420px) {
             .nav-card { padding: 18px 10px 16px; border-radius: 24px; }
@@ -179,9 +103,8 @@
 <body>
 <div class="nav-card">
 
-    <!-- 头部 -->
     <div class="header">
-        <div class="logo">🧭 StartHere <span class="badge">导航+游戏</span></div>
+        <div class="logo">🧭 StartHere <span class="badge">导航+游戏+AI</span></div>
         <div class="engine-selector">
             <label for="engineSelect">🔎</label>
             <select id="engineSelect">
@@ -195,7 +118,6 @@
         </div>
     </div>
 
-    <!-- 搜索 -->
     <div class="search-area">
         <form id="searchForm" class="input-group">
             <span class="icon">🔍</span>
@@ -204,13 +126,11 @@
         </form>
     </div>
 
-    <!-- 猜你想搜 -->
     <div class="hot-section">
         <div class="hot-header"><span class="fire">🔥</span> 猜你想搜 · 热门直达</div>
         <div class="hot-tags" id="hotTags"></div>
     </div>
 
-    <!-- ===== 游戏中心 ===== -->
     <div class="game-center">
         <div class="game-header">
             <span class="title">🎮 游戏中心</span>
@@ -222,7 +142,31 @@
         </div>
     </div>
 
-    <!-- URL 直达 -->
+    <!-- AI 助手 -->
+    <div class="ai-assistant">
+        <div class="ai-header">
+            <span class="title">🤖 AI 助手</span>
+            <button class="ai-toggle-btn" id="aiToggleBtn">展开 AI 助手</button>
+        </div>
+        <div class="ai-chat-box" id="aiChatBox">
+            <div id="aiMessageContainer"></div>
+            <div class="ai-model-select">
+                <label for="aiModelSelect">模型：</label>
+                <select id="aiModelSelect">
+                    <option value="deepseek-chat">DeepSeek Chat</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                    <option value="gpt-4">GPT-4</option>
+                    <option value="claude-3-opus">Claude 3 Opus</option>
+                </select>
+                <span style="font-size:12px; color:#8aacbc;">（请根据您的 API 选择）</span>
+            </div>
+            <div class="ai-input-row">
+                <input type="text" id="aiInput" placeholder="输入问题，按 Enter 发送" />
+                <button id="aiSendBtn">发送</button>
+            </div>
+        </div>
+    </div>
+
     <div class="url-row">
         <form id="urlForm" class="input-group">
             <span class="icon">🔗</span>
@@ -242,8 +186,19 @@
     (function() {
         'use strict';
 
-        // ===== 游戏列表配置（根据您上传的文件名） =====
-        // 注意：文件名中的空格和特殊字符会由浏览器自动编码，无需手动转义
+        // =======================================================================
+        // ⚙️ AI 配置（前端直连，仅限个人测试！）
+        // =======================================================================
+        const AI_CONFIG = {
+            apiUrl: 'https://api-ai.7e.ink/v1/chat/completions',
+            apiKey: 'YOUR_API_KEY',   // ⬅️ 请填写您的真实密钥
+            defaultModel: 'deepseek-chat',
+        };
+
+        // ⚠️ 警告：API Key 将暴露在网页源码中，请勿公开分享此页面！
+        // =======================================================================
+
+        // ===== 游戏列表 =====
         const GAMES = [
             { name: 'Scratch 作品', file: 'Scratch_ (1) _ (1) (1).html' },
             { name: '作品 (3)', file: '作品_ (3) .html' },
@@ -264,9 +219,16 @@
         const gameToggleBtn = document.getElementById('gameToggleBtn');
         const gameIframeWrapper = document.getElementById('gameIframeWrapper');
         const gameIframe = document.getElementById('gameIframe');
+        const aiToggleBtn = document.getElementById('aiToggleBtn');
+        const aiChatBox = document.getElementById('aiChatBox');
+        const aiMessageContainer = document.getElementById('aiMessageContainer');
+        const aiInput = document.getElementById('aiInput');
+        const aiSendBtn = document.getElementById('aiSendBtn');
+        const aiModelSelect = document.getElementById('aiModelSelect');
 
         let isGameGridOpen = false;
-        let currentGameFile = '';
+        let isAiOpen = false;
+        let aiHistory = [];
 
         // ===== 搜索引擎 =====
         const ENGINES = {
@@ -319,7 +281,7 @@
             }
         }
 
-        // ===== 渲染热门标签 =====
+        // ===== 渲染热门 =====
         function renderHotTags() {
             const fragment = document.createDocumentFragment();
             HOT_ITEMS.forEach(item => {
@@ -331,7 +293,6 @@
             });
             hotTags.appendChild(fragment);
         }
-
         hotTags.addEventListener('click', function(e) {
             const tag = e.target.closest('.hot-tag');
             if (!tag) return;
@@ -339,7 +300,7 @@
             if (keyword) handleHotItem(keyword);
         });
 
-        // ===== 渲染游戏列表 =====
+        // ===== 游戏渲染 =====
         function renderGameGrid() {
             const fragment = document.createDocumentFragment();
             GAMES.forEach((game, index) => {
@@ -353,35 +314,26 @@
             gameGrid.appendChild(fragment);
         }
 
-        // ===== 加载游戏 =====
         function loadGame(file) {
             if (!file) return;
-            // 构建相对路径，游戏文件在 games 文件夹下
             const gameUrl = './games/' + file;
             gameIframe.src = gameUrl;
             gameIframeWrapper.classList.add('active');
-            // 高亮当前选中的游戏
             document.querySelectorAll('.game-item').forEach(el => {
                 el.classList.toggle('active-game', el.dataset.file === file);
             });
-            currentGameFile = file;
         }
 
-        // ===== 游戏列表点击事件（委托） =====
         gameGrid.addEventListener('click', function(e) {
             const item = e.target.closest('.game-item');
             if (!item) return;
             const file = item.dataset.file;
             if (file) {
                 loadGame(file);
-                // 如果游戏列表未展开，自动展开
-                if (!isGameGridOpen) {
-                    toggleGameGrid(true);
-                }
+                if (!isGameGridOpen) toggleGameGrid(true);
             }
         });
 
-        // ===== 展开/收起游戏列表 =====
         function toggleGameGrid(forceOpen) {
             const willOpen = (forceOpen !== undefined) ? forceOpen : !isGameGridOpen;
             if (willOpen) {
@@ -392,13 +344,106 @@
                 gameGrid.classList.remove('active');
                 gameToggleBtn.textContent = '展开游戏列表';
                 isGameGridOpen = false;
-                // 如果 iframe 没有内容，可以保留，但不主动关闭
+            }
+        }
+        gameToggleBtn.addEventListener('click', function() { toggleGameGrid(); });
+
+        // ===== AI 助手逻辑（前端直连） =====
+        function addAIMessage(role, content) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'ai-message ' + role;
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.textContent = content;
+            msgDiv.appendChild(bubble);
+            const time = document.createElement('div');
+            time.className = 'timestamp';
+            time.textContent = new Date().toLocaleTimeString();
+            msgDiv.appendChild(time);
+            aiMessageContainer.appendChild(msgDiv);
+            aiMessageContainer.scrollTop = aiMessageContainer.scrollHeight;
+            aiHistory.push({ role, content });
+        }
+
+        function setAILoading(loading) {
+            if (loading) {
+                aiSendBtn.disabled = true;
+                aiSendBtn.innerHTML = '<span class="ai-loading"></span>';
+            } else {
+                aiSendBtn.disabled = false;
+                aiSendBtn.textContent = '发送';
             }
         }
 
-        gameToggleBtn.addEventListener('click', function() {
-            toggleGameGrid();
+        async function sendAIMessage() {
+            const userMsg = aiInput.value.trim();
+            if (!userMsg) return;
+            aiInput.value = '';
+            addAIMessage('user', userMsg);
+
+            const model = aiModelSelect.value;
+            const messages = aiHistory.map(m => ({ role: m.role, content: m.content }));
+
+            setAILoading(true);
+            try {
+                const response = await fetch(AI_CONFIG.apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + AI_CONFIG.apiKey
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: messages,
+                        stream: false,
+                        temperature: 0.7,
+                        max_tokens: 2000
+                    })
+                });
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    throw new Error(`API 请求失败 (${response.status}): ${errText}`);
+                }
+
+                const data = await response.json();
+                let reply = data.choices?.[0]?.message?.content;
+                if (!reply && data.content) reply = data.content;
+                if (!reply) reply = '（无回复内容）';
+                addAIMessage('assistant', reply);
+            } catch (error) {
+                addAIMessage('assistant', '❌ 出错了：' + error.message);
+                console.error('AI Error:', error);
+            } finally {
+                setAILoading(false);
+            }
+        }
+
+        aiSendBtn.addEventListener('click', sendAIMessage);
+        aiInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendAIMessage();
+            }
         });
+
+        function toggleAI(forceOpen) {
+            const willOpen = (forceOpen !== undefined) ? forceOpen : !isAiOpen;
+            if (willOpen) {
+                aiChatBox.classList.add('active');
+                aiToggleBtn.textContent = '收起 AI 助手';
+                isAiOpen = true;
+                if (aiHistory.length === 0) {
+                    addAIMessage('assistant', '👋 你好！我是 AI 助手，有什么可以帮你的？');
+                }
+                setTimeout(() => aiInput.focus(), 100);
+            } else {
+                aiChatBox.classList.remove('active');
+                aiToggleBtn.textContent = '展开 AI 助手';
+                isAiOpen = false;
+            }
+        }
+        aiToggleBtn.addEventListener('click', function() { toggleAI(); });
 
         // ===== 搜索表单 =====
         searchForm.addEventListener('submit', function(e) {
@@ -470,11 +515,6 @@
         // ===== 初始化 =====
         renderHotTags();
         renderGameGrid();
-        // 默认加载第一个游戏（可选）
-        if (GAMES.length > 0) {
-            // 自动加载第一个游戏（非强制，用户也可手动点击）
-            // 这里我们不自动加载，让用户自己点击展开和选择
-        }
 
         setTimeout(() => {
             if (!document.activeElement || document.activeElement === document.body) {
@@ -482,7 +522,7 @@
             }
         }, 200);
 
-        console.log('🎮 游戏中心已加载，共 ' + GAMES.length + ' 个游戏');
+        console.log('🚀 StartHere 已启动（前端直连 AI，仅限个人测试）');
     })();
 </script>
 </body>
