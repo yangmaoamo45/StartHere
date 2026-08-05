@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关于作者 · StartHere</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
+            background: linear-gradient(145deg, #f0f6fc 0%, #dce8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .about-card {
+            max-width: 720px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 48px;
+            padding: 48px 40px 40px;
+            box-shadow: 0 30px 60px -12px rgba(0,30,50,0.25), 0 8px 24px -6px rgba(0,0,0,0.04), inset 0 1px 2px rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+            animation: fadeUp 0.5s ease-out;
+        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0078d4, #00a3e0);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(0,120,212,0.2);
+            user-select: none;
+            overflow: hidden;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: 600;
+            color: #0b2b3b;
+            margin-bottom: 6px;
+        }
+        .bio {
+            font-size: 16px;
+            color: #4a6a7a;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #0078d4, #00a3e0);
+            border-radius: 4px;
+            margin: 0 auto 20px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin: 20px 0 16px;
+        }
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 40px;
+            background: rgba(255,255,255,0.7);
+            color: #0b2b3b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: 0.2s;
+        }
+        .social-links a:hover {
+            background: #fff;
+            border-color: #0078d4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,120,212,0.08);
+        }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 12px;
+            margin: 16px 0 24px;
+        }
+        .skills span {
+            background: rgba(0,120,212,0.06);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #0078d4;
+            border: 1px solid rgba(0,120,212,0.04);
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 12px;
+            color: #0078d4;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            margin-top: 28px;
+            font-size: 13px;
+            color: #8aacbc;
+        }
+
+        /* ===== 手机端完全自适应 ===== */
+        @media (max-width: 600px) {
+            .about-card {
+                padding: 32px 20px 28px;
+                border-radius: 32px;
+            }
+            .avatar {
+                width: 90px;
+                height: 90px;
+                font-size: 38px;
+            }
+            .name {
+                font-size: 22px;
+            }
+            .bio {
+                font-size: 15px;
+            }
+            .social-links {
+                gap: 10px;
+            }
+            .social-links a {
+                padding: 6px 16px;
+                font-size: 13px;
+            }
+            .skills span {
+                font-size: 12px;
+                padding: 3px 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .about-card {
+                padding: 24px 14px 20px;
+                border-radius: 24px;
+            }
+            .avatar {
+                width: 72px;
+                height: 72px;
+                font-size: 30px;
+            }
+            .name {
+                font-size: 19px;
+            }
+            .bio {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="name">Yang Mao</div>
+    <div class="bio">
+        热爱技术与创造，喜欢把想法变成现实。<br />
+        这里是我的个人导航站，汇集了常用工具和有趣的小项目。
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="skills">
+        <span>🌐 Web 开发</span>
+        <span>🐍 Python</span>
+        <span>☕ JavaScript</span>
+        <span>⚛️ 学习爱好者</span>
+        <span>🎮 独立游戏</span>
+    </div>
+
+    <div class="social-links">
+        <a href="https://github.com/yangmaoamo45" target="_blank">🐙 GitHub</a>
+        <a href="#" target="_blank">📧 Email</a>
+        <a href="#" target="_blank">🐦 微博</a>
+        <a href="#" target="_blank">📱 微信</a>
+    </div>
+
+    <a class="back-link" href="/">← 返回 StartHere 导航</a>
+
+    <div class="footer">© 2026 Yang Mao · 用 ❤️ 打造</div>
+</div>
+
+</body>
+</html>
