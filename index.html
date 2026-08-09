@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StartHere · 智能导航</title>
+    <!-- ===== TDK 优化 ===== -->
+    <title>我的个人导航站 · 搜索、游戏、实用工具</title>
+    <meta name="description" content="这里是我的个人导航站，集成了多引擎搜索、热门网站直达和在线小游戏，是一个简洁实用的上网入口。每天打开，快速找到你需要的一切。" />
+    <meta name="keywords" content="导航站, 个人导航, 实用工具, 在线游戏, 网页搜索, StartHere" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <style>
+        /* ===== 完整样式 ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
@@ -142,6 +146,15 @@
         .footer-hint a { color: #0078d4; text-decoration: none; }
         .footer-hint a:hover { text-decoration: underline; }
 
+        .copyright {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #8aacbc;
+            border-top: 1px solid rgba(0,0,0,0.04);
+            padding-top: 14px;
+        }
+
         @media (max-width: 680px) {
             .nav-card { padding: 24px 16px 20px; border-radius: 32px; }
             .header { flex-direction: column; align-items: stretch; gap: 10px; }
@@ -164,447 +177,449 @@
 </head>
 <body>
 
-<div class="nav-card">
+    <!-- ===== 语义化主容器 ===== -->
+    <main class="nav-card" role="main">
 
-    <!-- 头部 -->
-    <div class="header">
-        <div class="logo">🧭 StartHere <span class="badge">搜索三合一</span></div>
-        <div class="engine-selector">
-            <label for="engineSelect">🔎</label>
-            <select id="engineSelect">
-                <option value="bing" selected>🔵 必应 Bing</option>
-                <option value="baidu">🔴 百度 Baidu</option>
-                <option value="google">🟢 Google</option>
-                <option value="sogou">🟠 搜狗 Sogou</option>
-                <option value="360">🟡 360搜索</option>
-            </select>
-            <span class="engine-status">✅ 新标签页打开</span>
+        <!-- 头部（语义化 header） -->
+        <header class="header">
+            <div class="logo">🧭 StartHere <span class="badge">搜索三合一</span></div>
+            <div class="engine-selector">
+                <label for="engineSelect">🔎</label>
+                <select id="engineSelect">
+                    <option value="bing" selected>🔵 必应 Bing</option>
+                    <option value="baidu">🔴 百度 Baidu</option>
+                    <option value="google">🟢 Google</option>
+                    <option value="sogou">🟠 搜狗 Sogou</option>
+                    <option value="360">🟡 360搜索</option>
+                </select>
+                <span class="engine-status">✅ 新标签页打开</span>
+            </div>
+        </header>
+
+        <!-- 搜索区域（语义化 section） -->
+        <section class="search-area" aria-label="搜索框">
+            <form id="searchForm" class="input-group" role="search">
+                <span class="icon" aria-hidden="true">🔍</span>
+                <input type="text" id="searchInput" placeholder="输入关键词..." autocomplete="off" />
+                <button type="submit" class="btn" id="searchBtn"><span>搜索</span></button>
+            </form>
+        </section>
+
+        <!-- 搜索模式切换（语义化 nav） -->
+        <nav class="search-mode-bar" aria-label="搜索模式">
+            <button class="search-mode-btn active" data-mode="web" id="modeWeb">🌐 网页搜索</button>
+            <button class="search-mode-btn" data-mode="agg" id="modeAgg">📊 聚合搜索</button>
+            <button class="search-mode-btn" data-mode="site" id="modeSite">📁 站内搜索</button>
+            <span class="search-mode-hint" id="modeHint">输入关键词，跳转到搜索引擎</span>
+        </nav>
+
+        <!-- 站内搜索结果 -->
+        <div class="site-search-results" id="siteResults" role="region" aria-live="polite"></div>
+
+        <!-- 猜你想搜（语义化 section） -->
+        <section class="hot-section" aria-label="热门直达">
+            <h2 class="hot-header"><span class="fire">🔥</span> 猜你想搜 · 热门直达</h2>
+            <div class="hot-tags" id="hotTags"></div>
+        </section>
+
+        <!-- 游戏中心（语义化 section） -->
+        <section class="game-center" aria-label="游戏中心">
+            <div class="game-header">
+                <h2 class="title">🎮 游戏中心</h2>
+                <button class="game-toggle-btn" id="gameToggleBtn">展开游戏列表</button>
+            </div>
+            <div class="game-grid" id="gameGrid"></div>
+            <div class="game-iframe-wrapper" id="gameIframeWrapper">
+                <iframe id="gameIframe" src="about:blank" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy" title="游戏内嵌窗口"></iframe>
+            </div>
+        </section>
+
+        <!-- URL 直达（语义化 section） -->
+        <section class="url-row" aria-label="直接输入网址">
+            <form id="urlForm" class="input-group" role="form">
+                <span class="icon" aria-hidden="true">🔗</span>
+                <input type="text" id="urlInput" placeholder="直接输入网址，如 github.com" autocomplete="off" spellcheck="false" />
+                <button type="submit" class="btn">前往</button>
+            </form>
+        </section>
+
+        <!-- 底部（语义化 footer） -->
+        <footer class="footer-hint">
+            <span>⌨️ <kbd>/</kbd> 聚焦搜索</span>
+            <span class="sep">·</span>
+            <span><kbd>Esc</kbd> 清空输入</span>
+            <span class="sep">·</span>
+            <span>URL 框按 <kbd>Enter</kbd> 直达</span>
+            <span class="sep">·</span>
+            <span><a href="/about.html">📖 关于作者</a></span>
+        </footer>
+
+        <!-- 版权信息 -->
+        <div class="copyright">
+            © 2026 yang工作室 版权所有
         </div>
-    </div>
 
-    <!-- 搜索区域 -->
-    <div class="search-area">
-        <form id="searchForm" class="input-group">
-            <span class="icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="输入关键词..." autocomplete="off" />
-            <button type="submit" class="btn" id="searchBtn"><span>搜索</span></button>
-        </form>
-    </div>
+    </main>
 
-    <!-- 搜索模式切换 -->
-    <div class="search-mode-bar">
-        <button class="search-mode-btn active" data-mode="web" id="modeWeb">🌐 网页搜索</button>
-        <button class="search-mode-btn" data-mode="agg" id="modeAgg">📊 聚合搜索</button>
-        <button class="search-mode-btn" data-mode="site" id="modeSite">📁 站内搜索</button>
-        <span class="search-mode-hint" id="modeHint">输入关键词，跳转到搜索引擎</span>
-    </div>
+    <script>
+        (function() {
+            'use strict';
 
-    <!-- 站内搜索结果 -->
-    <div class="site-search-results" id="siteResults"></div>
+            // ===== 数据 =====
+            const GAMES = [
+                { name: 'Scratch 作品', file: 'Scratch_ (1) _ (1) (1).html' },
+                { name: '作品 (3)', file: '作品_ (3) .html' },
+                { name: '几何冲刺 (5) (1)', file: '几何冲刺_ (5) (1) .html' },
+                { name: '几何冲刺 (5) (2)', file: '几何冲刺_ (5)  (2) .html' },
+                { name: '抽奖机 (不要赌博)', file: '抽奖机 (不要赌博)_ (2) (1) .html' },
+                { name: '苟活之重生', file: '苟活之重生.html' }
+            ];
 
-    <!-- 猜你想搜 -->
-    <div class="hot-section">
-        <div class="hot-header"><span class="fire">🔥</span> 猜你想搜 · 热门直达</div>
-        <div class="hot-tags" id="hotTags"></div>
-    </div>
+            const HOT_ITEMS_MAP = {
+                'CCTV1在线直播': 'https://tv.cctv.com/live/cctv1/',
+                'CCTV2财经': 'https://tv.cctv.com/live/cctv2/',
+                'CCTV3综艺': 'https://tv.cctv.com/live/cctv3/',
+                'CCTV4中文国际': 'https://tv.cctv.com/live/cctv4/',
+                'CCTV5体育': 'https://tv.cctv.com/live/cctv5/',
+                'CCTV6电影': 'https://tv.cctv.com/live/cctv6/',
+                'CCTV节目官网': 'https://cctv.com/',
+                '国家中小学智慧教育': 'https://basic.smartedu.cn/',
+                '国家法律法规数据库': 'https://flk.npc.gov.cn/',
+                '百度一下': 'https://www.baidu.com',
+                '哔哩哔哩': 'https://www.bilibili.com',
+                '抖音': 'https://www.douyin.com',
+                '小红书': 'https://www.xiaohongshu.com',
+                '淘宝': 'https://www.taobao.com',
+                '腾讯视频': 'https://v.qq.com',
+                '爱奇艺': 'https://www.iqiyi.com',
+                '网易云音乐': 'https://music.163.com',
+                '汽车之家': 'https://www.autohome.com.cn',
+                '直播中国': 'https://livechina.cctv.com/',
+                '央博': 'https://yangbo.cctv.com/',
+            };
+            const HOT_ITEMS = Object.keys(HOT_ITEMS_MAP);
 
-    <!-- 游戏中心 -->
-    <div class="game-center">
-        <div class="game-header">
-            <span class="title">🎮 游戏中心</span>
-            <button class="game-toggle-btn" id="gameToggleBtn">展开游戏列表</button>
-        </div>
-        <div class="game-grid" id="gameGrid"></div>
-        <div class="game-iframe-wrapper" id="gameIframeWrapper">
-            <iframe id="gameIframe" src="about:blank" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" loading="lazy"></iframe>
-        </div>
-    </div>
+            const ENGINES = {
+                bing:   { name: '必应', url: 'https://www.bing.com/search?q=' },
+                baidu:  { name: '百度', url: 'https://www.baidu.com/s?wd=' },
+                google: { name: 'Google', url: 'https://www.google.com/search?q=' },
+                sogou:  { name: '搜狗', url: 'https://www.sogou.com/web?query=' },
+                '360':  { name: '360搜索', url: 'https://www.so.com/s?q=' }
+            };
 
-    <!-- URL 直达 -->
-    <div class="url-row">
-        <form id="urlForm" class="input-group">
-            <span class="icon">🔗</span>
-            <input type="text" id="urlInput" placeholder="直接输入网址，如 github.com" autocomplete="off" spellcheck="false" />
-            <button type="submit" class="btn">前往</button>
-        </form>
-    </div>
+            // ===== 状态 =====
+            let currentMode = 'web';
+            let searchQuery = '';
 
-    <!-- 底部（含“关于作者”） -->
-    <div class="footer-hint">
-        <span>⌨️ <kbd>/</kbd> 聚焦搜索</span>
-        <span class="sep">·</span>
-        <span><kbd>Esc</kbd> 清空输入</span>
-        <span class="sep">·</span>
-        <span>URL 框按 <kbd>Enter</kbd> 直达</span>
-        <span class="sep">·</span>
-        <span><a href="/about.html">📖 关于作者</a></span>
-    </div>
+            // ===== DOM 引用 =====
+            const engineSelect = document.getElementById('engineSelect');
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const modeWeb = document.getElementById('modeWeb');
+            const modeAgg = document.getElementById('modeAgg');
+            const modeSite = document.getElementById('modeSite');
+            const modeHint = document.getElementById('modeHint');
+            const siteResults = document.getElementById('siteResults');
+            const hotTags = document.getElementById('hotTags');
+            const gameGrid = document.getElementById('gameGrid');
+            const gameToggleBtn = document.getElementById('gameToggleBtn');
+            const gameIframeWrapper = document.getElementById('gameIframeWrapper');
+            const gameIframe = document.getElementById('gameIframe');
+            const urlForm = document.getElementById('urlForm');
+            const urlInput = document.getElementById('urlInput');
 
-    <div style="text-align:center; margin-top:16px; font-size:13px; color:#8aacbc; border-top:1px solid rgba(0,0,0,0.04); padding-top:14px;">
-    © 2026 yang工作室 版权所有
-</div>
+            let isGameGridOpen = false;
 
-</div>
-
-<script>
-    (function() {
-        'use strict';
-
-        // ===== 数据 =====
-        const GAMES = [
-            { name: 'Scratch 作品', file: 'Scratch_ (1) _ (1) (1).html' },
-            { name: '作品 (3)', file: '作品_ (3) .html' },
-            { name: '几何冲刺 (5) (1)', file: '几何冲刺_ (5) (1) .html' },
-            { name: '几何冲刺 (5) (2)', file: '几何冲刺_ (5)  (2) .html' },
-            { name: '抽奖机 (不要赌博)', file: '抽奖机 (不要赌博)_ (2) (1) .html' },
-            { name: '苟活之重生', file: '苟活之重生.html' }
-        ];
-
-        const HOT_ITEMS_MAP = {
-            'CCTV1在线直播': 'https://tv.cctv.com/live/cctv1/',
-            'CCTV2财经': 'https://tv.cctv.com/live/cctv2/',
-            'CCTV3综艺': 'https://tv.cctv.com/live/cctv3/',
-            'CCTV4中文国际': 'https://tv.cctv.com/live/cctv4/',
-            'CCTV5体育': 'https://tv.cctv.com/live/cctv5/',
-            'CCTV6电影': 'https://tv.cctv.com/live/cctv6/',
-            'CCTV节目官网': 'https://cctv.com/',
-            '国家中小学智慧教育': 'https://basic.smartedu.cn/',
-            '国家法律法规数据库': 'https://flk.npc.gov.cn/',
-            '百度一下': 'https://www.baidu.com',
-            '哔哩哔哩': 'https://www.bilibili.com',
-            '抖音': 'https://www.douyin.com',
-            '小红书': 'https://www.xiaohongshu.com',
-            '淘宝': 'https://www.taobao.com',
-            '腾讯视频': 'https://v.qq.com',
-            '爱奇艺': 'https://www.iqiyi.com',
-            '网易云音乐': 'https://music.163.com',
-            '汽车之家': 'https://www.autohome.com.cn',
-            '直播中国': 'https://livechina.cctv.com/',
-            '央博': 'https://yangbo.cctv.com/',
-        };
-        const HOT_ITEMS = Object.keys(HOT_ITEMS_MAP);
-
-        const ENGINES = {
-            bing:   { name: '必应', url: 'https://www.bing.com/search?q=' },
-            baidu:  { name: '百度', url: 'https://www.baidu.com/s?wd=' },
-            google: { name: 'Google', url: 'https://www.google.com/search?q=' },
-            sogou:  { name: '搜狗', url: 'https://www.sogou.com/web?query=' },
-            '360':  { name: '360搜索', url: 'https://www.so.com/s?q=' }
-        };
-
-        // ===== 状态 =====
-        let currentMode = 'web';
-        let searchQuery = '';
-
-        // ===== DOM 引用 =====
-        const engineSelect = document.getElementById('engineSelect');
-        const searchForm = document.getElementById('searchForm');
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const modeWeb = document.getElementById('modeWeb');
-        const modeAgg = document.getElementById('modeAgg');
-        const modeSite = document.getElementById('modeSite');
-        const modeHint = document.getElementById('modeHint');
-        const siteResults = document.getElementById('siteResults');
-        const hotTags = document.getElementById('hotTags');
-        const gameGrid = document.getElementById('gameGrid');
-        const gameToggleBtn = document.getElementById('gameToggleBtn');
-        const gameIframeWrapper = document.getElementById('gameIframeWrapper');
-        const gameIframe = document.getElementById('gameIframe');
-        const urlForm = document.getElementById('urlForm');
-        const urlInput = document.getElementById('urlInput');
-
-        let isGameGridOpen = false;
-
-        // ===== 模式切换 =====
-        function setMode(mode) {
-            currentMode = mode;
-            [modeWeb, modeAgg, modeSite].forEach(btn => btn.classList.remove('active'));
-            if (mode === 'web') {
-                modeWeb.classList.add('active');
-                modeHint.textContent = '输入关键词，跳转到所选搜索引擎';
-            } else if (mode === 'agg') {
-                modeAgg.classList.add('active');
-                modeHint.textContent = '输入关键词，同时打开多个搜索引擎';
-            } else if (mode === 'site') {
-                modeSite.classList.add('active');
-                modeHint.textContent = '输入关键词，在站内搜索（游戏、热门链接）';
-                siteResults.innerHTML = '';
-                siteResults.classList.remove('active');
-                searchInput.focus();
-            }
-            if (mode === 'site' && searchQuery) {
-                doSiteSearch(searchQuery);
-            } else {
-                siteResults.classList.remove('active');
-                siteResults.innerHTML = '';
-            }
-        }
-
-        // ===== 执行搜索 =====
-        function performSearch(query) {
-            if (!query || !query.trim()) { searchInput.focus(); return; }
-            const trimmed = query.trim();
-            searchQuery = trimmed;
-
-            if (currentMode === 'web') {
-                const engineKey = engineSelect.value;
-                const engine = ENGINES[engineKey];
-                if (!engine) return;
-                window.open(engine.url + encodeURIComponent(trimmed), '_blank');
-            } else if (currentMode === 'agg') {
-                const engineKeys = Object.keys(ENGINES);
-                const selected = new Set([engineSelect.value, 'bing', 'baidu', 'google']);
-                const targets = engineKeys.filter(k => selected.has(k));
-                targets.forEach(key => {
-                    const eng = ENGINES[key];
-                    if (eng) {
-                        window.open(eng.url + encodeURIComponent(trimmed), '_blank');
-                    }
-                });
-                searchBtn.innerHTML = '<span>✓ 已打开多引擎</span>';
-                setTimeout(() => { searchBtn.innerHTML = '<span>搜索</span>'; }, 800);
-            } else if (currentMode === 'site') {
-                doSiteSearch(trimmed);
-            }
-        }
-
-        // ===== 站内搜索 =====
-        function doSiteSearch(query) {
-            const results = [];
-            const lower = query.toLowerCase();
-
-            HOT_ITEMS.forEach(item => {
-                if (item.toLowerCase().includes(lower)) {
-                    results.push({
-                        type: '热门链接',
-                        name: item,
-                        url: HOT_ITEMS_MAP[item],
-                        match: item
-                    });
+            // ===== 模式切换 =====
+            function setMode(mode) {
+                currentMode = mode;
+                [modeWeb, modeAgg, modeSite].forEach(btn => btn.classList.remove('active'));
+                if (mode === 'web') {
+                    modeWeb.classList.add('active');
+                    modeHint.textContent = '输入关键词，跳转到所选搜索引擎';
+                } else if (mode === 'agg') {
+                    modeAgg.classList.add('active');
+                    modeHint.textContent = '输入关键词，同时打开多个搜索引擎';
+                } else if (mode === 'site') {
+                    modeSite.classList.add('active');
+                    modeHint.textContent = '输入关键词，在站内搜索（游戏、热门链接）';
+                    siteResults.innerHTML = '';
+                    siteResults.classList.remove('active');
+                    searchInput.focus();
                 }
-            });
-
-            GAMES.forEach(game => {
-                if (game.name.toLowerCase().includes(lower)) {
-                    results.push({
-                        type: '游戏',
-                        name: game.name,
-                        url: './games/' + game.file,
-                        match: game.name
-                    });
+                if (mode === 'site' && searchQuery) {
+                    doSiteSearch(searchQuery);
+                } else {
+                    siteResults.classList.remove('active');
+                    siteResults.innerHTML = '';
                 }
-            });
+            }
 
-            if (results.length === 0) {
-                siteResults.innerHTML = '<div class="no-result">😅 未找到相关内容，试试其他关键词</div>';
-            } else {
-                let html = '';
-                results.forEach((res) => {
-                    let displayName = res.name;
-                    const idx = displayName.toLowerCase().indexOf(lower);
-                    if (idx !== -1) {
-                        const before = displayName.substring(0, idx);
-                        const match = displayName.substring(idx, idx + lower.length);
-                        const after = displayName.substring(idx + lower.length);
-                        displayName = before + '<strong style="color:#0078d4;">' + match + '</strong>' + after;
-                    }
-                    html += `
-                        <div class="result-item" data-url="${res.url}" data-type="${res.type}">
-                            <span>${displayName}</span>
-                            <span class="tag">${res.type}</span>
-                            <span class="url">${res.url}</span>
-                        </div>
-                    `;
-                });
-                siteResults.innerHTML = html;
-                siteResults.querySelectorAll('.result-item').forEach(el => {
-                    el.addEventListener('click', function() {
-                        const url = this.dataset.url;
-                        const type = this.dataset.type;
-                        if (url) {
-                            if (type === '游戏') {
-                                loadGameFromUrl(url);
-                                if (!isGameGridOpen) toggleGameGrid(true);
-                            } else {
-                                window.open(url, '_blank');
-                            }
+            // ===== 执行搜索 =====
+            function performSearch(query) {
+                if (!query || !query.trim()) { searchInput.focus(); return; }
+                const trimmed = query.trim();
+                searchQuery = trimmed;
+
+                if (currentMode === 'web') {
+                    const engineKey = engineSelect.value;
+                    const engine = ENGINES[engineKey];
+                    if (!engine) return;
+                    window.open(engine.url + encodeURIComponent(trimmed), '_blank');
+                } else if (currentMode === 'agg') {
+                    const engineKeys = Object.keys(ENGINES);
+                    const selected = new Set([engineSelect.value, 'bing', 'baidu', 'google']);
+                    const targets = engineKeys.filter(k => selected.has(k));
+                    targets.forEach(key => {
+                        const eng = ENGINES[key];
+                        if (eng) {
+                            window.open(eng.url + encodeURIComponent(trimmed), '_blank');
                         }
                     });
+                    searchBtn.innerHTML = '<span>✓ 已打开多引擎</span>';
+                    setTimeout(() => { searchBtn.innerHTML = '<span>搜索</span>'; }, 800);
+                } else if (currentMode === 'site') {
+                    doSiteSearch(trimmed);
+                }
+            }
+
+            // ===== 站内搜索 =====
+            function doSiteSearch(query) {
+                const results = [];
+                const lower = query.toLowerCase();
+
+                HOT_ITEMS.forEach(item => {
+                    if (item.toLowerCase().includes(lower)) {
+                        results.push({
+                            type: '热门链接',
+                            name: item,
+                            url: HOT_ITEMS_MAP[item],
+                            match: item
+                        });
+                    }
+                });
+
+                GAMES.forEach(game => {
+                    if (game.name.toLowerCase().includes(lower)) {
+                        results.push({
+                            type: '游戏',
+                            name: game.name,
+                            url: './games/' + game.file,
+                            match: game.name
+                        });
+                    }
+                });
+
+                if (results.length === 0) {
+                    siteResults.innerHTML = '<div class="no-result">😅 未找到相关内容，试试其他关键词</div>';
+                } else {
+                    let html = '';
+                    results.forEach((res) => {
+                        let displayName = res.name;
+                        const idx = displayName.toLowerCase().indexOf(lower);
+                        if (idx !== -1) {
+                            const before = displayName.substring(0, idx);
+                            const match = displayName.substring(idx, idx + lower.length);
+                            const after = displayName.substring(idx + lower.length);
+                            displayName = before + '<strong style="color:#0078d4;">' + match + '</strong>' + after;
+                        }
+                        html += `
+                            <div class="result-item" data-url="${res.url}" data-type="${res.type}">
+                                <span>${displayName}</span>
+                                <span class="tag">${res.type}</span>
+                                <span class="url">${res.url}</span>
+                            </div>
+                        `;
+                    });
+                    siteResults.innerHTML = html;
+                    siteResults.querySelectorAll('.result-item').forEach(el => {
+                        el.addEventListener('click', function() {
+                            const url = this.dataset.url;
+                            const type = this.dataset.type;
+                            if (url) {
+                                if (type === '游戏') {
+                                    loadGameFromUrl(url);
+                                    if (!isGameGridOpen) toggleGameGrid(true);
+                                } else {
+                                    window.open(url, '_blank');
+                                }
+                            }
+                        });
+                    });
+                }
+                siteResults.classList.add('active');
+            }
+
+            function loadGameFromUrl(url) {
+                gameIframe.src = url;
+                gameIframeWrapper.classList.add('active');
+                const fileName = url.split('/').pop();
+                document.querySelectorAll('.game-item').forEach(el => {
+                    el.classList.toggle('active-game', el.dataset.file === fileName);
                 });
             }
-            siteResults.classList.add('active');
-        }
 
-        function loadGameFromUrl(url) {
-            gameIframe.src = url;
-            gameIframeWrapper.classList.add('active');
-            const fileName = url.split('/').pop();
-            document.querySelectorAll('.game-item').forEach(el => {
-                el.classList.toggle('active-game', el.dataset.file === fileName);
+            // ===== 渲染热门 =====
+            function renderHotTags() {
+                const fragment = document.createDocumentFragment();
+                HOT_ITEMS.forEach(item => {
+                    const span = document.createElement('span');
+                    span.className = 'hot-tag';
+                    span.textContent = item;
+                    span.dataset.keyword = item;
+                    fragment.appendChild(span);
+                });
+                hotTags.appendChild(fragment);
+            }
+            hotTags.addEventListener('click', function(e) {
+                const tag = e.target.closest('.hot-tag');
+                if (!tag) return;
+                const keyword = tag.dataset.keyword;
+                if (keyword) {
+                    if (currentMode === 'site') {
+                        searchInput.value = keyword;
+                        performSearch(keyword);
+                    } else {
+                        const url = HOT_ITEMS_MAP[keyword];
+                        if (url) window.open(url, '_blank');
+                    }
+                }
             });
-        }
 
-        // ===== 渲染热门 =====
-        function renderHotTags() {
-            const fragment = document.createDocumentFragment();
-            HOT_ITEMS.forEach(item => {
-                const span = document.createElement('span');
-                span.className = 'hot-tag';
-                span.textContent = item;
-                span.dataset.keyword = item;
-                fragment.appendChild(span);
+            // ===== 游戏渲染 =====
+            function renderGameGrid() {
+                const fragment = document.createDocumentFragment();
+                GAMES.forEach((game, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'game-item';
+                    div.textContent = game.name;
+                    div.dataset.index = index;
+                    div.dataset.file = game.file;
+                    fragment.appendChild(div);
+                });
+                gameGrid.appendChild(fragment);
+            }
+
+            function loadGame(file) {
+                if (!file) return;
+                const gameUrl = './games/' + file;
+                gameIframe.src = gameUrl;
+                gameIframeWrapper.classList.add('active');
+                document.querySelectorAll('.game-item').forEach(el => {
+                    el.classList.toggle('active-game', el.dataset.file === file);
+                });
+            }
+
+            gameGrid.addEventListener('click', function(e) {
+                const item = e.target.closest('.game-item');
+                if (!item) return;
+                const file = item.dataset.file;
+                if (file) {
+                    loadGame(file);
+                    if (!isGameGridOpen) toggleGameGrid(true);
+                }
             });
-            hotTags.appendChild(fragment);
-        }
-        hotTags.addEventListener('click', function(e) {
-            const tag = e.target.closest('.hot-tag');
-            if (!tag) return;
-            const keyword = tag.dataset.keyword;
-            if (keyword) {
-                if (currentMode === 'site') {
-                    searchInput.value = keyword;
-                    performSearch(keyword);
+
+            function toggleGameGrid(forceOpen) {
+                const willOpen = (forceOpen !== undefined) ? forceOpen : !isGameGridOpen;
+                if (willOpen) {
+                    gameGrid.classList.add('active');
+                    gameToggleBtn.textContent = '收起游戏列表';
+                    isGameGridOpen = true;
                 } else {
-                    const url = HOT_ITEMS_MAP[keyword];
-                    if (url) window.open(url, '_blank');
+                    gameGrid.classList.remove('active');
+                    gameToggleBtn.textContent = '展开游戏列表';
+                    isGameGridOpen = false;
                 }
             }
-        });
+            gameToggleBtn.addEventListener('click', function() { toggleGameGrid(); });
 
-        // ===== 游戏渲染 =====
-        function renderGameGrid() {
-            const fragment = document.createDocumentFragment();
-            GAMES.forEach((game, index) => {
-                const div = document.createElement('div');
-                div.className = 'game-item';
-                div.textContent = game.name;
-                div.dataset.index = index;
-                div.dataset.file = game.file;
-                fragment.appendChild(div);
-            });
-            gameGrid.appendChild(fragment);
-        }
-
-        function loadGame(file) {
-            if (!file) return;
-            const gameUrl = './games/' + file;
-            gameIframe.src = gameUrl;
-            gameIframeWrapper.classList.add('active');
-            document.querySelectorAll('.game-item').forEach(el => {
-                el.classList.toggle('active-game', el.dataset.file === file);
-            });
-        }
-
-        gameGrid.addEventListener('click', function(e) {
-            const item = e.target.closest('.game-item');
-            if (!item) return;
-            const file = item.dataset.file;
-            if (file) {
-                loadGame(file);
-                if (!isGameGridOpen) toggleGameGrid(true);
-            }
-        });
-
-        function toggleGameGrid(forceOpen) {
-            const willOpen = (forceOpen !== undefined) ? forceOpen : !isGameGridOpen;
-            if (willOpen) {
-                gameGrid.classList.add('active');
-                gameToggleBtn.textContent = '收起游戏列表';
-                isGameGridOpen = true;
-            } else {
-                gameGrid.classList.remove('active');
-                gameToggleBtn.textContent = '展开游戏列表';
-                isGameGridOpen = false;
-            }
-        }
-        gameToggleBtn.addEventListener('click', function() { toggleGameGrid(); });
-
-        // ===== 搜索表单 =====
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const query = searchInput.value.trim();
-            if (!query) { searchInput.focus(); return; }
-            performSearch(query);
-        });
-
-        // ===== 模式切换按钮 =====
-        modeWeb.addEventListener('click', function() { setMode('web'); });
-        modeAgg.addEventListener('click', function() { setMode('agg'); });
-        modeSite.addEventListener('click', function() { setMode('site'); });
-
-        // ===== URL 直达 =====
-        function ensureProtocol(input) {
-            let trimmed = input.trim();
-            if (!trimmed) return null;
-            if (/^https?:\/\//i.test(trimmed)) return trimmed;
-            if (/^:\/\/.+/.test(trimmed)) return 'http' + trimmed;
-            if (trimmed.includes('.') && !/\s/.test(trimmed)) return 'https://' + trimmed;
-            return null;
-        }
-
-        urlForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const raw = urlInput.value.trim();
-            if (!raw) { urlInput.focus(); return; }
-            let target = ensureProtocol(raw);
-            if (!target) {
-                if (raw.includes('.') || raw.includes('localhost') || raw.includes(':')) {
-                    target = 'https://' + raw;
-                } else if (/^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?$/.test(raw)) {
-                    target = 'https://' + raw + '.com';
-                } else {
-                    target = 'https://' + raw;
-                }
-            }
-            try {
-                new URL(target);
-                window.open(target, '_blank');
-            } catch (_) {
-                const fallback = 'https://' + raw.replace(/^https?:\/\//, '');
-                try {
-                    new URL(fallback);
-                    window.open(fallback, '_blank');
-                } catch (__) {
-                    alert('无法识别该网址，将使用搜索引擎搜索 "' + raw + '"');
-                    window.open('https://www.bing.com/search?q=' + encodeURIComponent(raw), '_blank');
-                }
-            }
-            urlInput.value = '';
-        });
-
-        // ===== 键盘快捷键 =====
-        document.addEventListener('keydown', function(e) {
-            const tag = e.target.tagName.toLowerCase();
-            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-            if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            // ===== 搜索表单 =====
+            searchForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                searchInput.focus();
-                searchInput.select();
+                const query = searchInput.value.trim();
+                if (!query) { searchInput.focus(); return; }
+                performSearch(query);
+            });
+
+            // ===== 模式切换按钮 =====
+            modeWeb.addEventListener('click', function() { setMode('web'); });
+            modeAgg.addEventListener('click', function() { setMode('agg'); });
+            modeSite.addEventListener('click', function() { setMode('site'); });
+
+            // ===== URL 直达 =====
+            function ensureProtocol(input) {
+                let trimmed = input.trim();
+                if (!trimmed) return null;
+                if (/^https?:\/\//i.test(trimmed)) return trimmed;
+                if (/^:\/\/.+/.test(trimmed)) return 'http' + trimmed;
+                if (trimmed.includes('.') && !/\s/.test(trimmed)) return 'https://' + trimmed;
+                return null;
             }
-        });
 
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') { this.value = ''; this.blur(); siteResults.classList.remove('active'); }
-        });
-        urlInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') { this.value = ''; this.blur(); }
-        });
+            urlForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const raw = urlInput.value.trim();
+                if (!raw) { urlInput.focus(); return; }
+                let target = ensureProtocol(raw);
+                if (!target) {
+                    if (raw.includes('.') || raw.includes('localhost') || raw.includes(':')) {
+                        target = 'https://' + raw;
+                    } else if (/^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?$/.test(raw)) {
+                        target = 'https://' + raw + '.com';
+                    } else {
+                        target = 'https://' + raw;
+                    }
+                }
+                try {
+                    new URL(target);
+                    window.open(target, '_blank');
+                } catch (_) {
+                    const fallback = 'https://' + raw.replace(/^https?:\/\//, '');
+                    try {
+                        new URL(fallback);
+                        window.open(fallback, '_blank');
+                    } catch (__) {
+                        alert('无法识别该网址，将使用搜索引擎搜索 "' + raw + '"');
+                        window.open('https://www.bing.com/search?q=' + encodeURIComponent(raw), '_blank');
+                    }
+                }
+                urlInput.value = '';
+            });
 
-        // ===== 初始化 =====
-        renderHotTags();
-        renderGameGrid();
-        setMode('web');
+            // ===== 键盘快捷键 =====
+            document.addEventListener('keydown', function(e) {
+                const tag = e.target.tagName.toLowerCase();
+                if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+                if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    e.preventDefault();
+                    searchInput.focus();
+                    searchInput.select();
+                }
+            });
 
-        setTimeout(() => {
-            if (!document.activeElement || document.activeElement === document.body) {
-                searchInput.focus();
-            }
-        }, 200);
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') { this.value = ''; this.blur(); siteResults.classList.remove('active'); }
+            });
+            urlInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') { this.value = ''; this.blur(); }
+            });
 
-        console.log('🚀 StartHere 已启动，搜索三合一，无 AI 助手');
-    })();
-</script>
+            // ===== 初始化 =====
+            renderHotTags();
+            renderGameGrid();
+            setMode('web');
+
+            setTimeout(() => {
+                if (!document.activeElement || document.activeElement === document.body) {
+                    searchInput.focus();
+                }
+            }, 200);
+
+            console.log('🚀 StartHere 已启动，搜索三合一，TDK 优化版');
+        })();
+    </script>
 
 </body>
 </html>
