@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>使用指南 · StartHere 维基</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <!-- 引入 marked.js 用于渲染 Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -71,6 +73,83 @@
             border-radius: 20px;
             font-size: 13px;
             font-weight: 500;
+        }
+        .wiki-section code {
+            background: rgba(0,0,0,0.04);
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* Markdown 渲染样式 */
+        .markdown-body {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #3a5a6a;
+        }
+        .markdown-body h1 {
+            font-size: 24px;
+            color: #0b2b3b;
+            border-bottom: 2px solid rgba(0,120,212,0.06);
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+        .markdown-body h2 {
+            font-size: 20px;
+            color: #0b2b3b;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            padding-bottom: 6px;
+        }
+        .markdown-body h3 {
+            font-size: 17px;
+            color: #0b2b3b;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+        .markdown-body ul {
+            padding-left: 22px;
+            margin-bottom: 12px;
+        }
+        .markdown-body ul li {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #3a5a6a;
+            margin-bottom: 4px;
+        }
+        .markdown-body ul ul {
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+        .markdown-body code {
+            background: rgba(0,0,0,0.04);
+            padding: 1px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'Consolas', monospace;
+        }
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            margin: 20px 0;
+        }
+        .markdown-body blockquote {
+            border-left: 4px solid #0078d4;
+            padding-left: 16px;
+            margin: 12px 0;
+            color: #5a7a8a;
+        }
+        .markdown-body .loading {
+            text-align: center;
+            padding: 40px 0;
+            color: #8aacbc;
+        }
+        .markdown-body .error {
+            text-align: center;
+            padding: 40px 0;
+            color: #e0455a;
         }
 
         .back-link {
@@ -170,16 +249,12 @@
         </ul>
     </section>
 
-    <!-- 6. 更新日志 -->
+    <!-- ===== 6. 更新日志（从 changelog.md 动态加载） ===== -->
     <section class="wiki-section" id="changelog">
         <h2>6. 📅 更新日志</h2>
-        <ul>
-            <li><strong>2026-08-10</strong>：发布 Wiki 页面，优化 TDK 和 SEO。</li>
-            <li><strong>2026-08-09</strong>：添加站点图标，优化移动端自适应，新增“关于作者”页面。</li>
-            <li><strong>2026-08-08</strong>：整合三种搜索模式（网页、聚合、站内），移除 AI 助手模块。</li>
-            <li><strong>2026-08-06</strong>：游戏中心上线，收录 6 款小游戏。</li>
-            <li><strong>2026-08-01</strong>：StartHere 导航站首次发布。</li>
-        </ul>
+        <div id="changelog-container" class="markdown-body">
+            <div class="loading">⏳ 正在加载更新日志...</div>
+        </div>
     </section>
 
     <!-- 返回导航 -->
@@ -188,6 +263,67 @@
     <div class="footer">© 2026 yang工作室 · 用 ❤️ 打造</div>
 
 </div>
+
+<script>
+    (function() {
+        'use strict';
+
+        const container = document.getElementById('changelog-container');
+
+        // 如果 marked 库已加载
+        async function loadChangelog() {
+            try {
+                const response = await fetch('/changelog.md');
+
+                if (!response.ok) {
+                    throw new Error(`加载失败 (HTTP ${response.status})`);
+                }
+
+                const markdown = await response.text();
+
+                // 检查是否为空
+                if (!markdown.trim()) {
+                    container.innerHTML = '<div class="error">⚠️ changelog.md 文件为空</div>';
+                    return;
+                }
+
+                // 使用 marked 渲染 Markdown
+                if (typeof marked !== 'undefined') {
+                    // 配置 marked 选项
+                    marked.setOptions({
+                        breaks: true,
+                        gfm: true
+                    });
+                    const html = marked.parse(markdown);
+                    container.innerHTML = html;
+                } else {
+                    // 如果 marked 未加载，降级显示
+                    container.innerHTML = '<div class="error">⚠️ Markdown 解析库未加载，请刷新页面重试</div>';
+                    console.warn('marked library not loaded');
+                }
+
+            } catch (error) {
+                console.error('加载 changelog.md 失败:', error);
+                container.innerHTML = `
+                    <div class="error">
+                        ❌ 加载更新日志失败<br />
+                        <span style="font-size:14px;color:#8aacbc;">${error.message}</span>
+                        <br /><br />
+                        <span style="font-size:13px;color:#8aacbc;">请确认 <code>/changelog.md</code> 文件存在</span>
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载完成后获取
+        if (document.readyState === 'complete') {
+            loadChangelog();
+        } else {
+            window.addEventListener('load', loadChangelog);
+        }
+
+    })();
+</script>
 
 </body>
 </html>
