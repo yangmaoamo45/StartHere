@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TDK 优化 -->
     <title>我的个人导航站 · 搜索、游戏、实用工具</title>
     <meta name="description" content="这里是我的个人导航站，集成了多引擎搜索、热门网站直达和在线小游戏，是一个简洁实用的上网入口。每天打开，快速找到你需要的一切。" />
     <meta name="keywords" content="导航站, 个人导航, 实用工具, 在线游戏, 网页搜索, StartHere" />
@@ -77,56 +76,50 @@
             gap: 8px;
         }
 
-        /* 天气样式 */
-        .weather-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
+        /* 天气 iframe 样式 */
+        .weather-iframe {
+            width: 100%;
+            height: 180px;
+            border: none;
+            border-radius: 16px;
+            background: #000;
+            color: #fff;
+            font-family: monospace;
         }
-        .weather-temp {
-            font-size: 28px;
-            font-weight: 600;
-            color: #0b2b3b;
-        }
-        .weather-desc {
-            font-size: 15px;
-            color: #4a6a7a;
-        }
-        .weather-icon {
-            font-size: 36px;
-        }
-        .weather-city {
-            font-size: 14px;
+        .weather-control {
+            margin-top: 8px;
+            text-align: right;
+            font-size: 13px;
             color: #6a8a9a;
             display: flex;
             align-items: center;
+            justify-content: flex-end;
             gap: 6px;
         }
-        .weather-city input {
-            background: rgba(255,255,255,0.5);
+        .weather-control input {
+            background: rgba(255,255,255,0.3);
             border: 1px solid rgba(0,0,0,0.06);
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 13px;
-            width: 100px;
-            outline: none;
+            border-radius: 16px;
+            padding: 2px 10px;
+            width: 90px;
             font-family: inherit;
+            outline: none;
+            font-size: 13px;
         }
-        .weather-city input:focus {
+        .weather-control input:focus {
             border-color: #0078d4;
             background: #fff;
         }
-        .weather-city button {
+        .weather-control button {
             background: none;
             border: none;
             color: #0078d4;
             cursor: pointer;
-            font-size: 13px;
             font-weight: 500;
         }
-        .weather-city button:hover { text-decoration: underline; }
+        .weather-control button:hover {
+            text-decoration: underline;
+        }
 
         /* 日历样式 */
         .calendar-header {
@@ -297,11 +290,13 @@
             .search-mode-bar { justify-content: center; }
             .footer-hint { gap: 4px 12px; font-size: 12px; }
             .widget-box { flex: 1 1 100%; }
+            .weather-iframe { height: 160px; }
         }
         @media (max-width: 420px) {
             .nav-card { padding: 18px 10px 16px; border-radius: 24px; }
             .logo { font-size: 19px; }
             .game-iframe-wrapper.active { height: 300px; }
+            .weather-iframe { height: 140px; }
         }
     </style>
 </head>
@@ -337,21 +332,13 @@
 
         <!-- ===== 天气 + 日历模块 ===== -->
         <div class="widget-row">
-            <!-- 天气 -->
+            <!-- 天气（iframe 嵌入 wttr.in，最稳定） -->
             <div class="widget-box">
                 <h3>🌤️ 天气</h3>
-                <div class="weather-content" id="weatherContent">
-                    <div>
-                        <div class="weather-temp" id="weatherTemp">--°C</div>
-                        <div class="weather-desc" id="weatherDesc">加载中...</div>
-                    </div>
-                    <div>
-                        <div class="weather-icon" id="weatherIcon">☁️</div>
-                        <div class="weather-city">
-                            <input type="text" id="cityInput" placeholder="城市" value="北京" />
-                            <button id="cityBtn">更新</button>
-                        </div>
-                    </div>
+                <iframe id="weatherIframe" class="weather-iframe" src="https://wttr.in/北京?lang=zh&m&0"></iframe>
+                <div class="weather-control">
+                    <input type="text" id="cityIframe" placeholder="城市" value="北京" />
+                    <button id="updateIframe">更新</button>
                 </div>
             </div>
 
@@ -431,7 +418,26 @@
             'use strict';
 
             // ========================================
-            // 1. 游戏数据 & 热门数据（保持不变）
+            // 0. 天气 iframe 更新功能
+            // ========================================
+            const cityInput = document.getElementById('cityIframe');
+            const updateBtn = document.getElementById('updateIframe');
+            const weatherIframe = document.getElementById('weatherIframe');
+
+            function updateWeather() {
+                const city = cityInput.value.trim() || '北京';
+                weatherIframe.src = `https://wttr.in/${encodeURIComponent(city)}?lang=zh&m&0`;
+            }
+
+            updateBtn.addEventListener('click', updateWeather);
+            cityInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    updateWeather();
+                }
+            });
+
+            // ========================================
+            // 1. 游戏数据 & 热门数据
             // ========================================
             const GAMES = [
                 { name: 'Scratch 作品', file: 'Scratch_ (1) _ (1) (1).html' },
@@ -475,61 +481,7 @@
             };
 
             // ========================================
-            // 2. 天气功能
-            // ========================================
-            const cityInput = document.getElementById('cityInput');
-            const cityBtn = document.getElementById('cityBtn');
-            const weatherTemp = document.getElementById('weatherTemp');
-            const weatherDesc = document.getElementById('weatherDesc');
-            const weatherIcon = document.getElementById('weatherIcon');
-
-            async function fetchWeather(city) {
-                if (!city) city = '北京';
-                const url = `https://wttr.in/${encodeURIComponent(city)}?format=%C+%t&lang=zh`;
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error('天气请求失败');
-                    const text = await response.text();
-                    // 解析返回的文本，格式如 "北京 +26°C"
-                    const parts = text.trim().split(/\s+/);
-                    // 处理温度
-                    let temp = parts[parts.length - 1];
-                    let desc = parts.slice(0, parts.length - 1).join(' ');
-                    // 默认图标（根据描述简单匹配）
-                    let icon = '☀️';
-                    if (desc.includes('云')) icon = '⛅';
-                    else if (desc.includes('雨')) icon = '🌧️';
-                    else if (desc.includes('雪')) icon = '❄️';
-                    else if (desc.includes('雾')) icon = '🌫️';
-                    else if (desc.includes('晴')) icon = '☀️';
-                    else if (desc.includes('阴')) icon = '☁️';
-                    weatherTemp.textContent = temp;
-                    weatherDesc.textContent = desc;
-                    weatherIcon.textContent = icon;
-                } catch (error) {
-                    weatherTemp.textContent = '--°C';
-                    weatherDesc.textContent = '获取失败';
-                    weatherIcon.textContent = '⚠️';
-                    console.warn('天气加载失败:', error);
-                }
-            }
-
-            // 初始加载
-            fetchWeather('北京');
-
-            cityBtn.addEventListener('click', function() {
-                const city = cityInput.value.trim();
-                if (city) fetchWeather(city);
-            });
-
-            cityInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    cityBtn.click();
-                }
-            });
-
-            // ========================================
-            // 3. 日历功能
+            // 2. 日历功能
             // ========================================
             let currentDate = new Date();
             let currentYear = currentDate.getFullYear();
@@ -541,7 +493,7 @@
             const nextMonthBtn = document.getElementById('nextMonth');
 
             function renderCalendar(year, month) {
-                const firstDay = new Date(year, month, 1).getDay(); // 0=周日
+                const firstDay = new Date(year, month, 1).getDay();
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
                 const daysInPrevMonth = new Date(year, month, 0).getDate();
                 const today = new Date();
@@ -553,41 +505,33 @@
                 monthYearEl.textContent = `${year}年 ${monthNames[month]}`;
 
                 let html = '';
-                // 星期头
                 const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
                 weekdays.forEach(w => {
                     html += `<div class="weekday">${w}</div>`;
                 });
 
-                // 填充上月剩余日期
-                const startOffset = firstDay === 0 ? 6 : firstDay - 1; // 周一为一周开始
+                const startOffset = firstDay === 0 ? 6 : firstDay - 1;
                 const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
                 let day = 1;
                 let prevDay = daysInPrevMonth - startOffset + 1;
-                let isPrevMonth = true;
 
                 for (let i = 0; i < totalCells; i++) {
                     let cls = 'day';
                     let dayNumber;
                     if (i < startOffset) {
-                        // 上月
                         dayNumber = prevDay++;
                         cls += ' other-month';
                     } else if (day <= daysInMonth) {
                         dayNumber = day++;
-                        isPrevMonth = false;
-                        // 判断是否为今天
                         if (year === todayYear && month === todayMonth && dayNumber === todayDate) {
                             cls += ' today';
                         }
                     } else {
-                        // 下月
                         dayNumber = (day++ - daysInMonth);
                         cls += ' other-month';
                     }
                     html += `<div class="${cls}" data-day="${dayNumber}">${dayNumber}</div>`;
                 }
-
                 calendarGrid.innerHTML = html;
             }
 
@@ -606,7 +550,6 @@
             prevMonthBtn.addEventListener('click', function() { changeMonth(-1); });
             nextMonthBtn.addEventListener('click', function() { changeMonth(1); });
 
-            // 点击日期可简单提示（可选）
             calendarGrid.addEventListener('click', function(e) {
                 const dayEl = e.target.closest('.day');
                 if (dayEl && !dayEl.classList.contains('other-month')) {
@@ -615,11 +558,10 @@
                 }
             });
 
-            // 初始化日历
             renderCalendar(currentYear, currentMonth);
 
             // ========================================
-            // 4. 原有功能（搜索、游戏、热门等）
+            // 3. 原有功能（搜索、游戏、热门等）
             // ========================================
             let currentMode = 'web';
             let searchQuery = '';
@@ -919,7 +861,7 @@
                 }
             }, 200);
 
-            console.log('🚀 StartHere 已启动，天气+日历已集成');
+            console.log('🚀 StartHere 已启动，天气使用 iframe 嵌入（最稳定）');
         })();
     </script>
 
