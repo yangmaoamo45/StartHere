@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- ===== TDK 优化 ===== -->
+    <!-- TDK 优化 -->
     <title>我的个人导航站 · 搜索、游戏、实用工具</title>
     <meta name="description" content="这里是我的个人导航站，集成了多引擎搜索、热门网站直达和在线小游戏，是一个简洁实用的上网入口。每天打开，快速找到你需要的一切。" />
     <meta name="keywords" content="导航站, 个人导航, 实用工具, 在线游戏, 网页搜索, StartHere" />
@@ -50,6 +50,135 @@
         .input-group .btn { background: linear-gradient(135deg, #0078d4, #0095e8); border: none; color: #fff; font-weight: 600; font-size: 15px; padding: 12px 28px; border-radius: 40px; cursor: pointer; transition: all 0.2s; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,120,212,0.22); flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
         .input-group .btn:hover { background: linear-gradient(135deg, #0067b8, #0086d0); transform: scale(1.02); }
         .input-group .btn:active { transform: scale(0.96); }
+
+        /* ===== 天气 + 日历模块 ===== */
+        .widget-row {
+            display: flex;
+            gap: 20px;
+            margin: 16px 0 10px;
+            flex-wrap: wrap;
+        }
+        .widget-box {
+            flex: 1 1 45%;
+            min-width: 240px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 30px;
+            padding: 16px 18px 18px;
+            border: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(4px);
+        }
+        .widget-box h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #3a5a6a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 天气样式 */
+        .weather-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .weather-temp {
+            font-size: 28px;
+            font-weight: 600;
+            color: #0b2b3b;
+        }
+        .weather-desc {
+            font-size: 15px;
+            color: #4a6a7a;
+        }
+        .weather-icon {
+            font-size: 36px;
+        }
+        .weather-city {
+            font-size: 14px;
+            color: #6a8a9a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .weather-city input {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            width: 100px;
+            outline: none;
+            font-family: inherit;
+        }
+        .weather-city input:focus {
+            border-color: #0078d4;
+            background: #fff;
+        }
+        .weather-city button {
+            background: none;
+            border: none;
+            color: #0078d4;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .weather-city button:hover { text-decoration: underline; }
+
+        /* 日历样式 */
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .calendar-header .month-year {
+            font-size: 16px;
+            font-weight: 500;
+            color: #0b2b3b;
+        }
+        .calendar-header .nav-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 6px;
+            color: #4a6a7a;
+            transition: 0.2s;
+        }
+        .calendar-header .nav-btn:hover { color: #0078d4; }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            text-align: center;
+        }
+        .calendar-grid .weekday {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6a8a9a;
+            padding: 4px 0;
+        }
+        .calendar-grid .day {
+            font-size: 14px;
+            padding: 4px 0;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #0b2b3b;
+        }
+        .calendar-grid .day:hover { background: rgba(0,120,212,0.08); }
+        .calendar-grid .day.today {
+            background: #0078d4;
+            color: #fff;
+            font-weight: 600;
+        }
+        .calendar-grid .day.other-month {
+            color: #b0ccd8;
+        }
 
         .search-mode-bar {
             display: flex;
@@ -167,6 +296,7 @@
             .game-iframe-wrapper.active { height: 380px; }
             .search-mode-bar { justify-content: center; }
             .footer-hint { gap: 4px 12px; font-size: 12px; }
+            .widget-box { flex: 1 1 100%; }
         }
         @media (max-width: 420px) {
             .nav-card { padding: 18px 10px 16px; border-radius: 24px; }
@@ -180,7 +310,7 @@
     <!-- ===== 语义化主容器 ===== -->
     <main class="nav-card" role="main">
 
-        <!-- 头部（语义化 header） -->
+        <!-- 头部 -->
         <header class="header">
             <div class="logo">🧭 StartHere <span class="badge">搜索三合一</span></div>
             <div class="engine-selector">
@@ -196,7 +326,7 @@
             </div>
         </header>
 
-        <!-- 搜索区域（语义化 section） -->
+        <!-- 搜索区域 -->
         <section class="search-area" aria-label="搜索框">
             <form id="searchForm" class="input-group" role="search">
                 <span class="icon" aria-hidden="true">🔍</span>
@@ -205,7 +335,41 @@
             </form>
         </section>
 
-        <!-- 搜索模式切换（语义化 nav） -->
+        <!-- ===== 天气 + 日历模块 ===== -->
+        <div class="widget-row">
+            <!-- 天气 -->
+            <div class="widget-box">
+                <h3>🌤️ 天气</h3>
+                <div class="weather-content" id="weatherContent">
+                    <div>
+                        <div class="weather-temp" id="weatherTemp">--°C</div>
+                        <div class="weather-desc" id="weatherDesc">加载中...</div>
+                    </div>
+                    <div>
+                        <div class="weather-icon" id="weatherIcon">☁️</div>
+                        <div class="weather-city">
+                            <input type="text" id="cityInput" placeholder="城市" value="北京" />
+                            <button id="cityBtn">更新</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日历 -->
+            <div class="widget-box">
+                <h3>📅 日历</h3>
+                <div id="calendarContainer">
+                    <div class="calendar-header">
+                        <button class="nav-btn" id="prevMonth">‹</button>
+                        <span class="month-year" id="monthYear"></span>
+                        <button class="nav-btn" id="nextMonth">›</button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜索模式切换 -->
         <nav class="search-mode-bar" aria-label="搜索模式">
             <button class="search-mode-btn active" data-mode="web" id="modeWeb">🌐 网页搜索</button>
             <button class="search-mode-btn" data-mode="agg" id="modeAgg">📊 聚合搜索</button>
@@ -216,13 +380,13 @@
         <!-- 站内搜索结果 -->
         <div class="site-search-results" id="siteResults" role="region" aria-live="polite"></div>
 
-        <!-- 猜你想搜（语义化 section） -->
+        <!-- 猜你想搜 -->
         <section class="hot-section" aria-label="热门直达">
             <h2 class="hot-header"><span class="fire">🔥</span> 猜你想搜 · 热门直达</h2>
             <div class="hot-tags" id="hotTags"></div>
         </section>
 
-        <!-- 游戏中心（语义化 section） -->
+        <!-- 游戏中心 -->
         <section class="game-center" aria-label="游戏中心">
             <div class="game-header">
                 <h2 class="title">🎮 游戏中心</h2>
@@ -234,7 +398,7 @@
             </div>
         </section>
 
-        <!-- URL 直达（语义化 section） -->
+        <!-- URL 直达 -->
         <section class="url-row" aria-label="直接输入网址">
             <form id="urlForm" class="input-group" role="form">
                 <span class="icon" aria-hidden="true">🔗</span>
@@ -243,7 +407,7 @@
             </form>
         </section>
 
-        <!-- 底部（语义化 footer） -->
+        <!-- 底部 -->
         <footer class="footer-hint">
             <span>⌨️ <kbd>/</kbd> 聚焦搜索</span>
             <span class="sep">·</span>
@@ -256,7 +420,6 @@
             <span><a href="/wiki.html">📚 使用指南</a></span>
         </footer>
 
-        <!-- 版权信息 -->
         <div class="copyright">
             © 2026 yang工作室 版权所有
         </div>
@@ -267,7 +430,9 @@
         (function() {
             'use strict';
 
-            // ===== 数据 =====
+            // ========================================
+            // 1. 游戏数据 & 热门数据（保持不变）
+            // ========================================
             const GAMES = [
                 { name: 'Scratch 作品', file: 'Scratch_ (1) _ (1) (1).html' },
                 { name: '作品 (3)', file: '作品_ (3) .html' },
@@ -309,11 +474,156 @@
                 '360':  { name: '360搜索', url: 'https://www.so.com/s?q=' }
             };
 
-            // ===== 状态 =====
+            // ========================================
+            // 2. 天气功能
+            // ========================================
+            const cityInput = document.getElementById('cityInput');
+            const cityBtn = document.getElementById('cityBtn');
+            const weatherTemp = document.getElementById('weatherTemp');
+            const weatherDesc = document.getElementById('weatherDesc');
+            const weatherIcon = document.getElementById('weatherIcon');
+
+            async function fetchWeather(city) {
+                if (!city) city = '北京';
+                const url = `https://wttr.in/${encodeURIComponent(city)}?format=%C+%t&lang=zh`;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('天气请求失败');
+                    const text = await response.text();
+                    // 解析返回的文本，格式如 "北京 +26°C"
+                    const parts = text.trim().split(/\s+/);
+                    // 处理温度
+                    let temp = parts[parts.length - 1];
+                    let desc = parts.slice(0, parts.length - 1).join(' ');
+                    // 默认图标（根据描述简单匹配）
+                    let icon = '☀️';
+                    if (desc.includes('云')) icon = '⛅';
+                    else if (desc.includes('雨')) icon = '🌧️';
+                    else if (desc.includes('雪')) icon = '❄️';
+                    else if (desc.includes('雾')) icon = '🌫️';
+                    else if (desc.includes('晴')) icon = '☀️';
+                    else if (desc.includes('阴')) icon = '☁️';
+                    weatherTemp.textContent = temp;
+                    weatherDesc.textContent = desc;
+                    weatherIcon.textContent = icon;
+                } catch (error) {
+                    weatherTemp.textContent = '--°C';
+                    weatherDesc.textContent = '获取失败';
+                    weatherIcon.textContent = '⚠️';
+                    console.warn('天气加载失败:', error);
+                }
+            }
+
+            // 初始加载
+            fetchWeather('北京');
+
+            cityBtn.addEventListener('click', function() {
+                const city = cityInput.value.trim();
+                if (city) fetchWeather(city);
+            });
+
+            cityInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    cityBtn.click();
+                }
+            });
+
+            // ========================================
+            // 3. 日历功能
+            // ========================================
+            let currentDate = new Date();
+            let currentYear = currentDate.getFullYear();
+            let currentMonth = currentDate.getMonth();
+
+            const monthYearEl = document.getElementById('monthYear');
+            const calendarGrid = document.getElementById('calendarGrid');
+            const prevMonthBtn = document.getElementById('prevMonth');
+            const nextMonthBtn = document.getElementById('nextMonth');
+
+            function renderCalendar(year, month) {
+                const firstDay = new Date(year, month, 1).getDay(); // 0=周日
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const daysInPrevMonth = new Date(year, month, 0).getDate();
+                const today = new Date();
+                const todayDate = today.getDate();
+                const todayMonth = today.getMonth();
+                const todayYear = today.getFullYear();
+
+                const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+                monthYearEl.textContent = `${year}年 ${monthNames[month]}`;
+
+                let html = '';
+                // 星期头
+                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+                weekdays.forEach(w => {
+                    html += `<div class="weekday">${w}</div>`;
+                });
+
+                // 填充上月剩余日期
+                const startOffset = firstDay === 0 ? 6 : firstDay - 1; // 周一为一周开始
+                const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+                let day = 1;
+                let prevDay = daysInPrevMonth - startOffset + 1;
+                let isPrevMonth = true;
+
+                for (let i = 0; i < totalCells; i++) {
+                    let cls = 'day';
+                    let dayNumber;
+                    if (i < startOffset) {
+                        // 上月
+                        dayNumber = prevDay++;
+                        cls += ' other-month';
+                    } else if (day <= daysInMonth) {
+                        dayNumber = day++;
+                        isPrevMonth = false;
+                        // 判断是否为今天
+                        if (year === todayYear && month === todayMonth && dayNumber === todayDate) {
+                            cls += ' today';
+                        }
+                    } else {
+                        // 下月
+                        dayNumber = (day++ - daysInMonth);
+                        cls += ' other-month';
+                    }
+                    html += `<div class="${cls}" data-day="${dayNumber}">${dayNumber}</div>`;
+                }
+
+                calendarGrid.innerHTML = html;
+            }
+
+            function changeMonth(delta) {
+                currentMonth += delta;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                } else if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar(currentYear, currentMonth);
+            }
+
+            prevMonthBtn.addEventListener('click', function() { changeMonth(-1); });
+            nextMonthBtn.addEventListener('click', function() { changeMonth(1); });
+
+            // 点击日期可简单提示（可选）
+            calendarGrid.addEventListener('click', function(e) {
+                const dayEl = e.target.closest('.day');
+                if (dayEl && !dayEl.classList.contains('other-month')) {
+                    const day = dayEl.dataset.day;
+                    alert(`你选择了 ${currentYear}年${currentMonth+1}月${day}日`);
+                }
+            });
+
+            // 初始化日历
+            renderCalendar(currentYear, currentMonth);
+
+            // ========================================
+            // 4. 原有功能（搜索、游戏、热门等）
+            // ========================================
             let currentMode = 'web';
             let searchQuery = '';
 
-            // ===== DOM 引用 =====
             const engineSelect = document.getElementById('engineSelect');
             const searchForm = document.getElementById('searchForm');
             const searchInput = document.getElementById('searchInput');
@@ -333,7 +643,6 @@
 
             let isGameGridOpen = false;
 
-            // ===== 模式切换 =====
             function setMode(mode) {
                 currentMode = mode;
                 [modeWeb, modeAgg, modeSite].forEach(btn => btn.classList.remove('active'));
@@ -358,7 +667,6 @@
                 }
             }
 
-            // ===== 执行搜索 =====
             function performSearch(query) {
                 if (!query || !query.trim()) { searchInput.focus(); return; }
                 const trimmed = query.trim();
@@ -386,7 +694,6 @@
                 }
             }
 
-            // ===== 站内搜索 =====
             function doSiteSearch(query) {
                 const results = [];
                 const lower = query.toLowerCase();
@@ -462,7 +769,6 @@
                 });
             }
 
-            // ===== 渲染热门 =====
             function renderHotTags() {
                 const fragment = document.createDocumentFragment();
                 HOT_ITEMS.forEach(item => {
@@ -489,7 +795,6 @@
                 }
             });
 
-            // ===== 游戏渲染 =====
             function renderGameGrid() {
                 const fragment = document.createDocumentFragment();
                 GAMES.forEach((game, index) => {
@@ -537,7 +842,6 @@
             }
             gameToggleBtn.addEventListener('click', function() { toggleGameGrid(); });
 
-            // ===== 搜索表单 =====
             searchForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const query = searchInput.value.trim();
@@ -545,12 +849,10 @@
                 performSearch(query);
             });
 
-            // ===== 模式切换按钮 =====
             modeWeb.addEventListener('click', function() { setMode('web'); });
             modeAgg.addEventListener('click', function() { setMode('agg'); });
             modeSite.addEventListener('click', function() { setMode('site'); });
 
-            // ===== URL 直达 =====
             function ensureProtocol(input) {
                 let trimmed = input.trim();
                 if (!trimmed) return null;
@@ -590,7 +892,6 @@
                 urlInput.value = '';
             });
 
-            // ===== 键盘快捷键 =====
             document.addEventListener('keydown', function(e) {
                 const tag = e.target.tagName.toLowerCase();
                 if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
@@ -608,7 +909,6 @@
                 if (e.key === 'Escape') { this.value = ''; this.blur(); }
             });
 
-            // ===== 初始化 =====
             renderHotTags();
             renderGameGrid();
             setMode('web');
@@ -619,7 +919,7 @@
                 }
             }, 200);
 
-            console.log('🚀 StartHere 已启动，搜索三合一，TDK 优化版');
+            console.log('🚀 StartHere 已启动，天气+日历已集成');
         })();
     </script>
 
