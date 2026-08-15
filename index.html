@@ -631,7 +631,7 @@
                 if (e.target === toolModal) toolModal.classList.remove('active');
             });
 
-            // ===== 5. 反馈功能（本地存储） =====
+            // ===== 5. 反馈功能（修复版） =====
             function openFeedback() {
                 toolModal.classList.add('active');
                 toolModalTitle.textContent = '💬 提交反馈 / 修改建议';
@@ -645,6 +645,11 @@
                             <option value="修改建议">✏️ 修改建议</option>
                         </select>
 
+                        <!-- 内容输入框（始终显示） -->
+                        <label style="margin-top:10px;">内容</label>
+                        <textarea id="feedbackContent" rows="4" placeholder="请详细描述你的建议、报错信息或要收录的网站..." style="width:100%; padding:10px 14px; border-radius:16px; border:1px solid var(--border-light); background:var(--input-bg); color:var(--text-primary); font-size:14px; outline:none; font-family:inherit;"></textarea>
+
+                        <!-- 修改建议专用字段（默认隐藏） -->
                         <div id="modifyFields" style="display:none; margin-top:10px;">
                             <label>要修改的文件</label>
                             <select id="modifyFile" style="width:100%; padding:10px 14px; border-radius:16px; border:1px solid var(--border-light); background:var(--input-bg); color:var(--text-primary); font-size:14px; outline:none;">
@@ -670,22 +675,25 @@
                     <div id="feedbackResult" style="margin-top:8px; font-size:14px; color:var(--text-muted);"></div>
                 `;
 
+                // 监听类型切换（显示/隐藏"修改建议"的额外字段）
                 document.getElementById('feedbackType').addEventListener('change', function() {
                     const show = this.value === '修改建议';
                     document.getElementById('modifyFields').style.display = show ? 'block' : 'none';
                 });
 
+                // 表单提交
                 document.getElementById('feedbackForm').addEventListener('submit', function(e) {
                     e.preventDefault();
                     const type = document.getElementById('feedbackType').value;
+                    const content = document.getElementById('feedbackContent').value.trim();
                     const contact = document.getElementById('feedbackContact').value.trim();
                     const resultEl = document.getElementById('feedbackResult');
 
                     // ===== 修改建议 → 跳转 GitHub =====
                     if (type === '修改建议') {
                         const file = document.getElementById('modifyFile').value;
-                        const content = document.getElementById('modifyContent').value.trim();
-                        if (!content) {
+                        const modifyContent = document.getElementById('modifyContent').value.trim();
+                        if (!modifyContent) {
                             resultEl.textContent = '⚠️ 请填写修改内容';
                             resultEl.style.color = '#e0455a';
                             return;
@@ -704,9 +712,7 @@
                         return;
                     }
 
-                    // ===== 其他类型 → 本地存储 =====
-                    const contentField = document.querySelector('#feedbackForm textarea:not(#modifyContent)');
-                    const content = contentField ? contentField.value.trim() : '';
+                    // ===== 其他类型（功能建议/报错反馈/收录申请）→ 本地存储 =====
                     if (!content) {
                         resultEl.textContent = '⚠️ 请填写内容';
                         resultEl.style.color = '#e0455a';
@@ -724,7 +730,7 @@
                     updateFeedbackCount();
                     resultEl.textContent = '✅ 反馈已保存！点击「查看反馈」可查看所有记录。';
                     resultEl.style.color = '#2a9d7a';
-                    if (contentField) contentField.value = '';
+                    document.getElementById('feedbackContent').value = '';
                     document.getElementById('feedbackContact').value = '';
                 });
             }
@@ -745,7 +751,8 @@
                 if (list.length === 0) {
                     toolModalBody.innerHTML = `<div class="empty-feedback">📭 暂无反馈记录</div>`;
                 } else {
-                    let html = `<div style="margin-bottom:8px; font-size:13px; color:var(--text-muted);">共 ${list.length} 条反馈</div>`;
+                    let html =
+                        `<div style="margin-bottom:8px; font-size:13px; color:var(--text-muted);">共 ${list.length} 条反馈</div>`;
                     const reversed = [...list].reverse();
                     reversed.forEach(item => {
                         html += `
@@ -867,7 +874,8 @@
 
             function changeMonth(delta) {
                 currentMonth += delta;
-                if (currentMonth < 0) { currentMonth = 11; currentYear--; } else if (currentMonth > 11) { currentMonth =
+                if (currentMonth < 0) { currentMonth = 11;
+                    currentYear--; } else if (currentMonth > 11) { currentMonth =
                     0;
                     currentYear++; }
                 renderCalendar(currentYear, currentMonth);
