@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>二维码生成器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+</head>
+<body>
+    <h2>二维码生成器</h2>
+    <input type="text" id="inputText" value="https://www.yang.636.ltd" style="width:300px; padding:8px;">
+    <button id="generateBtn">生成</button>
+    <br><br>
+    <canvas id="qrCanvas" width="256" height="256" style="border:1px solid #ccc; background:#fff;"></canvas>
+    <br>
+    <button id="downloadBtn">下载二维码</button>
+
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const text = document.getElementById('inputText').value.trim() || 'https://www.yang.636.ltd';
+            const canvas = document.getElementById('qrCanvas');
+            const qr = qrcode(0, 'M');
+            qr.addData(text);
+            qr.make();
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            const cellSize = size / qr.getModuleCount();
+            ctx.clearRect(0, 0, size, size);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, size, size);
+            ctx.fillStyle = '#000000';
+            for (let row = 0; row < qr.getModuleCount(); row++) {
+                for (let col = 0; col < qr.getModuleCount(); col++) {
+                    if (qr.isDark(row, col)) {
+                        ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                    }
+                }
+            }
+        });
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const canvas = document.getElementById('qrCanvas');
+            const link = document.createElement('a');
+            link.download = 'qrcode.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+        // 默认生成一次
+        document.getElementById('generateBtn').click();
+    </script>
+</body>
+</html>
