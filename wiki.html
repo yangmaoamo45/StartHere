@@ -6,106 +6,195 @@
     <title>使用指南 · StartHere 维基</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <!-- 引入 marked.js 用于渲染 Markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js">
+    </script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
-            background: linear-gradient(145deg, #f0f6fc 0%, #dce8f0 100%);
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f5f7fa;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            padding: 30px 20px;
+            color: #1a2332;
         }
         .wiki-card {
-            max-width: 820px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border-radius: 48px;
-            padding: 40px 44px 36px;
-            box-shadow: 0 30px 60px -12px rgba(0,30,50,0.25), 0 8px 24px -6px rgba(0,0,0,0.04), inset 0 1px 2px rgba(255,255,255,0.7);
-            border: 1px solid rgba(255,255,255,0.5);
-            animation: fadeUp 0.5s ease-out;
+            max-width: 860px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 40px 48px 36px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e8ecf0;
+            animation: fadeUp 0.4s ease-out;
         }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        .wiki-header { margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-        .wiki-header h1 { font-size: 26px; font-weight: 600; color: #0b2b3b; display: flex; align-items: center; gap: 10px; }
-        .wiki-header h1 .badge { background: linear-gradient(135deg, #0078d4, #00a3e0); color: #fff; font-size: 13px; padding: 2px 14px; border-radius: 40px; font-weight: 500; }
+        .wiki-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #eef1f4;
+        }
+        .wiki-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a2332;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .wiki-header h1 .badge {
+            background: #2563eb;
+            color: #fff;
+            font-size: 13px;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        .back-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
 
         .wiki-toc {
-            background: rgba(0,120,212,0.04);
-            border-radius: 20px;
+            background: #f8f9fb;
+            border-radius: 16px;
             padding: 16px 20px;
             margin-bottom: 28px;
-            border: 1px solid rgba(0,120,212,0.06);
+            border: 1px solid #eef1f4;
         }
-        .wiki-toc h2 { font-size: 15px; color: #3a5a6a; margin-bottom: 10px; font-weight: 500; }
-        .wiki-toc ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; }
-        .wiki-toc ul li a { color: #0078d4; text-decoration: none; font-size: 14px; }
-        .wiki-toc ul li a:hover { text-decoration: underline; }
+        .wiki-toc h2 {
+            font-size: 15px;
+            color: #4a5a6a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .wiki-toc ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+        }
+        .wiki-toc ul li a {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .wiki-toc ul li a:hover {
+            text-decoration: underline;
+        }
 
-        .wiki-section { margin-bottom: 28px; }
-        .wiki-section h2 { font-size: 20px; font-weight: 600; color: #0b2b3b; margin-bottom: 12px; border-bottom: 2px solid rgba(0,120,212,0.06); padding-bottom: 8px; }
-        .wiki-section h3 { font-size: 17px; font-weight: 600; color: #0b2b3b; margin: 16px 0 8px; }
-        .wiki-section p { font-size: 15px; line-height: 1.7; color: #3a5a6a; margin-bottom: 12px; }
-        .wiki-section ul { padding-left: 22px; margin-bottom: 12px; }
-        .wiki-section ul li { font-size: 15px; line-height: 1.7; color: #3a5a6a; margin-bottom: 4px; }
+        .wiki-section {
+            margin-bottom: 32px;
+        }
+        .wiki-section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a2332;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #eef1f4;
+            padding-bottom: 10px;
+        }
+        .wiki-section h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a2332;
+            margin: 16px 0 8px;
+        }
+        .wiki-section p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #3a4a5a;
+            margin-bottom: 12px;
+        }
+        .wiki-section ul {
+            padding-left: 22px;
+            margin-bottom: 12px;
+        }
+        .wiki-section ul li {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #3a4a5a;
+            margin-bottom: 4px;
+        }
         .wiki-section .code-block {
-            background: rgba(0,0,0,0.04);
+            background: #f0f2f5;
             padding: 12px 18px;
             border-radius: 12px;
             font-family: 'Consolas', 'Courier New', monospace;
             font-size: 14px;
-            color: #0b2b3b;
+            color: #1a2332;
             overflow-x: auto;
             margin: 10px 0 16px;
-            border: 1px solid rgba(0,0,0,0.04);
+            border: 1px solid #e8ecf0;
         }
         .wiki-section .tag {
             display: inline-block;
-            background: rgba(0,120,212,0.08);
-            color: #0078d4;
+            background: #e8edf5;
+            color: #2563eb;
             padding: 0 12px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 500;
         }
         .wiki-section code {
-            background: rgba(0,0,0,0.04);
+            background: #f0f2f5;
             padding: 1px 8px;
             border-radius: 4px;
             font-size: 14px;
             font-family: 'Consolas', monospace;
+            color: #d63384;
         }
 
         /* Markdown 渲染样式 */
         .markdown-body {
             font-size: 15px;
             line-height: 1.8;
-            color: #3a5a6a;
+            color: #3a4a5a;
         }
         .markdown-body h1 {
             font-size: 24px;
-            color: #0b2b3b;
-            border-bottom: 2px solid rgba(0,120,212,0.06);
+            color: #1a2332;
+            border-bottom: 2px solid #eef1f4;
             padding-bottom: 10px;
             margin-bottom: 16px;
         }
         .markdown-body h2 {
             font-size: 20px;
-            color: #0b2b3b;
+            color: #1a2332;
             margin-top: 24px;
             margin-bottom: 12px;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
+            border-bottom: 1px solid #eef1f4;
             padding-bottom: 6px;
         }
         .markdown-body h3 {
             font-size: 17px;
-            color: #0b2b3b;
+            color: #1a2332;
             margin-top: 18px;
             margin-bottom: 8px;
         }
@@ -116,214 +205,262 @@
         .markdown-body ul li {
             font-size: 15px;
             line-height: 1.8;
-            color: #3a5a6a;
-            margin-bottom: 4px;
-        }
-        .markdown-body ul ul {
-            margin-top: 4px;
+            color: #3a4a5a;
             margin-bottom: 4px;
         }
         .markdown-body code {
-            background: rgba(0,0,0,0.04);
+            background: #f0f2f5;
             padding: 1px 8px;
             border-radius: 4px;
             font-size: 14px;
             font-family: 'Consolas', monospace;
+            color: #d63384;
         }
         .markdown-body hr {
             border: none;
-            border-top: 1px solid rgba(0,0,0,0.06);
+            border-top: 1px solid #eef1f4;
             margin: 20px 0;
         }
         .markdown-body blockquote {
-            border-left: 4px solid #0078d4;
+            border-left: 4px solid #2563eb;
             padding-left: 16px;
             margin: 12px 0;
-            color: #5a7a8a;
+            color: #4a5a6a;
         }
         .markdown-body .loading {
             text-align: center;
             padding: 40px 0;
-            color: #8aacbc;
+            color: #8a9aaa;
         }
         .markdown-body .error {
             text-align: center;
             padding: 40px 0;
-            color: #e0455a;
+            color: #dc3545;
         }
 
-        .back-link {
-            display: inline-block;
-            margin-top: 8px;
-            color: #0078d4;
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-        .back-link:hover { text-decoration: underline; }
-
-        .footer {
-            margin-top: 32px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(0,0,0,0.04);
-            font-size: 13px;
-            color: #8aacbc;
+        .footer-area {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 2px solid #eef1f4;
             text-align: center;
+        }
+        .footer-area .ai-credit {
+            font-size: 13px;
+            color: #6a7a8a;
+            line-height: 1.6;
+        }
+        .footer-area .ai-credit a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .footer-area .ai-credit a:hover {
+            text-decoration: underline;
+        }
+        .footer-area .links {
+            margin: 10px 0 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px 16px;
+            flex-wrap: wrap;
+        }
+        .footer-area .links a {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .footer-area .links a:hover {
+            text-decoration: underline;
+        }
+        .footer-area .links .sep {
+            color: #bcc8d4;
+            font-size: 14px;
+        }
+        .footer-area .license {
+            font-size: 13px;
+            color: #8a9aaa;
+        }
+        .footer-area .copyright {
+            font-size: 13px;
+            color: #8a9aaa;
+            margin-top: 4px;
         }
 
         @media (max-width: 600px) {
-            .wiki-card { padding: 28px 18px 24px; border-radius: 32px; }
-            .wiki-header h1 { font-size: 21px; }
-            .wiki-section h2 { font-size: 18px; }
+            .wiki-card {
+                padding: 24px 18px 20px;
+                border-radius: 16px;
+            }
+            .wiki-header h1 {
+                font-size: 20px;
+            }
+            .wiki-section h2 {
+                font-size: 18px;
+            }
+            .wiki-toc ul {
+                gap: 4px 12px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="wiki-card">
+    <div class="wiki-card">
 
-    <!-- 头部 -->
-    <div class="wiki-header">
-        <h1>📚 StartHere <span class="badge">使用指南</span></h1>
-        <a class="back-link" href="/">← 返回导航</a>
-    </div>
-
-    <!-- 目录 -->
-    <div class="wiki-toc">
-        <h2>📌 本文目录</h2>
-        <ul>
-            <li><a href="#intro">1. 简介</a></li>
-            <li><a href="#search">2. 三种搜索模式</a></li>
-            <li><a href="#games">3. 游戏中心</a></li>
-            <li><a href="#hot">4. 热门直达</a></li>
-            <li><a href="#faq">5. 常见问题</a></li>
-            <li><a href="#changelog">6. 更新日志</a></li>
-        </ul>
-    </div>
-
-    <!-- 1. 简介 -->
-    <section class="wiki-section" id="intro">
-        <h2>1. 📖 简介</h2>
-        <p><strong>StartHere</strong> 是我的个人导航站，集成了多引擎搜索、热门直达和在线小游戏。目标是提供一个简洁、快速、美观的上网入口，每次打开新标签页都能立刻找到需要的内容。</p>
-        <p>本站采用 <span class="tag">毛玻璃效果</span> 设计，并在手机、平板和电脑上都能自适应显示。</p>
-    </section>
-
-    <!-- 2. 搜索模式 -->
-    <section class="wiki-section" id="search">
-        <h2>2. 🔍 三种搜索模式</h2>
-        <p>在搜索框下方，您可以通过三个按钮切换不同的搜索方式：</p>
-
-        <h3>🌐 网页搜索</h3>
-        <p>输入关键词后，直接跳转到您在下拉菜单中选中的搜索引擎（必应、百度、Google、搜狗、360搜索）。这是最常用的模式，适合日常查询。</p>
-
-        <h3>📊 聚合搜索</h3>
-        <p>输入关键词后，<strong>同时打开多个搜索引擎</strong>（必应、百度、Google）的搜索结果页面。适合需要对比不同搜索引擎结果的情况。</p>
-
-        <h3>📁 站内搜索</h3>
-        <p>在当前页面内实时搜索 <strong>“猜你想搜”中的热门词条</strong> 和 <strong>“游戏中心”中的游戏名称</strong>。点击匹配的结果可直接跳转（链接）或加载游戏到右侧的 iframe 窗口中。</p>
-    </section>
-
-    <!-- 3. 游戏中心 -->
-    <section class="wiki-section" id="games">
-        <h2>3. 🎮 游戏中心</h2>
-        <p>点击 <strong>“展开游戏列表”</strong> 按钮，会显示已收录的游戏名称。点击任意游戏，它会在下方的 iframe 窗口中直接运行，无需跳转新页面。</p>
-        <p>目前收录了 6 款小游戏，包括 Scratch 作品、几何冲刺、抽奖机等。后续会持续增加。</p>
-        <div class="code-block">💡 提示：游戏页面全部是 HTML 文件，存放在 /games/ 目录下，您可以自行替换或添加。</div>
-    </section>
-
-    <!-- 4. 热门直达 -->
-    <section class="wiki-section" id="hot">
-        <h2>4. 🔥 热门直达</h2>
-        <p>“猜你想搜”区域列出了常用网站和热门服务，如 <strong>CCTV 直播、哔哩哔哩、抖音、小红书、淘宝</strong> 等。点击即可快速直达，无需手动输入网址。</p>
-        <p>在“站内搜索”模式下，这些热门词条也会被搜索匹配，方便您快速定位。</p>
-    </section>
-
-    <!-- 5. 常见问题 -->
-    <section class="wiki-section" id="faq">
-        <h2>5. ❓ 常见问题</h2>
-        <ul>
-            <li><strong>问：为什么我打开网站显示 404？</strong><br />答：请确认访问地址是 <code>https://www.yang.636.ltd</code>，并检查网络连接。如果刚部署，可能需要等待 1~2 分钟。</li>
-            <li><strong>问：游戏无法加载怎么办？</strong><br />答：请确认 /games/ 目录下的 HTML 文件存在，且文件名与代码中一致。部分浏览器可能限制 iframe 加载本地文件，建议使用 Chrome 或 Edge。</li>
-            <li><strong>问：如何添加新的搜索引擎？</strong><br />答：在 index.html 的 JavaScript 中修改 <code>ENGINES</code> 对象，按格式添加即可。</li>
-            <li><strong>问：网站会被搜索引擎收录吗？</strong><br />答：已经提交了 sitemap.xml 给 Google 和 Bing，正在等待抓取和索引。</li>
-        </ul>
-    </section>
-
-    <!-- ===== 6. 更新日志（从 changelog.md 动态加载） ===== -->
-    <section class="wiki-section" id="changelog">
-        <h2>6. 📅 更新日志</h2>
-        <div id="changelog-container" class="markdown-body">
-            <div class="loading">⏳ 正在加载更新日志...</div>
+        <!-- 头部 -->
+        <div class="wiki-header">
+            <h1>📚 StartHere <span class="badge">使用指南</span></h1>
+            <a class="back-link" href="/">← 返回导航</a>
         </div>
-    </section>
 
-    <!-- 返回导航 -->
-    <a class="back-link" href="/">← 返回 StartHere 导航</a>
+        <!-- 目录 -->
+        <div class="wiki-toc">
+            <h2>📌 本文目录</h2>
+            <ul>
+                <li><a href="#intro">1. 简介</a></li>
+                <li><a href="#search">2. 三种搜索模式</a></li>
+                <li><a href="#games">3. 游戏中心</a></li>
+                <li><a href="#hot">4. 热门直达</a></li>
+                <li><a href="#faq">5. 常见问题</a></li>
+                <li><a href="#changelog">6. 更新日志</a></li>
+            </ul>
+        </div>
 
-    <div class="footer">© 2026 yang工作室 · 用 ❤️ 打造</div>
+        <!-- 1. 简介 -->
+        <section class="wiki-section" id="intro">
+            <h2>1. 📖 简介</h2>
+            <p><strong>StartHere</strong> 是我的个人导航站，集成了多引擎搜索、热门直达和在线小游戏。目标是提供一个简洁、快速、美观的上网入口，每次打开新标签页都能立刻找到需要的内容。</p>
+            <p>本站采用简洁清爽的设计风格，并在手机、平板和电脑上都能自适应显示。</p>
+        </section>
 
-</div>
+        <!-- 2. 搜索模式 -->
+        <section class="wiki-section" id="search">
+            <h2>2. 🔍 三种搜索模式</h2>
+            <p>在搜索框下方，您可以通过三个按钮切换不同的搜索方式：</p>
 
-<script>
-    (function() {
-        'use strict';
+            <h3>🌐 网页搜索</h3>
+            <p>输入关键词后，直接跳转到您在下拉菜单中选中的搜索引擎（必应、百度、Google、搜狗、360搜索）。这是最常用的模式，适合日常查询。</p>
 
-        const container = document.getElementById('changelog-container');
+            <h3>📊 聚合搜索</h3>
+            <p>输入关键词后，<strong>同时打开多个搜索引擎</strong>（必应、百度、Google）的搜索结果页面。适合需要对比不同搜索引擎结果的情况。</p>
 
-        // 如果 marked 库已加载
-        async function loadChangelog() {
-            try {
-                const response = await fetch('/changelog.md');
+            <h3>📁 站内搜索</h3>
+            <p>在当前页面内实时搜索 <strong>“猜你想搜”中的热门词条</strong> 和 <strong>“游戏中心”中的游戏名称</strong>。点击匹配的结果可直接跳转（链接）或加载游戏到右侧的 iframe 窗口中。</p>
+        </section>
 
-                if (!response.ok) {
-                    throw new Error(`加载失败 (HTTP ${response.status})`);
+        <!-- 3. 游戏中心 -->
+        <section class="wiki-section" id="games">
+            <h2>3. 🎮 游戏中心</h2>
+            <p>点击 <strong>“展开游戏列表”</strong> 按钮，会显示已收录的游戏名称。点击任意游戏，它会在下方的 iframe 窗口中直接运行，无需跳转新页面。</p>
+            <p>目前收录了 6 款小游戏，包括 Scratch 作品、几何冲刺、抽奖机等。后续会持续增加。</p>
+            <div class="code-block">💡 提示：游戏页面全部是 HTML 文件，存放在 /games/ 目录下，您可以自行替换或添加。</div>
+        </section>
+
+        <!-- 4. 热门直达 -->
+        <section class="wiki-section" id="hot">
+            <h2>4. 🔥 热门直达</h2>
+            <p>“猜你想搜”区域列出了常用网站和热门服务，如 <strong>CCTV 直播、哔哩哔哩、抖音、小红书、淘宝</strong> 等。点击即可快速直达，无需手动输入网址。</p>
+            <p>在“站内搜索”模式下，这些热门词条也会被搜索匹配，方便您快速定位。</p>
+        </section>
+
+        <!-- 5. 常见问题 -->
+        <section class="wiki-section" id="faq">
+            <h2>5. ❓ 常见问题</h2>
+            <ul>
+                <li><strong>问：为什么我打开网站显示 404？</strong><br />答：请确认访问地址是 <code>https://www.yang.636.ltd</code>，并检查网络连接。如果刚部署，可能需要等待 1~2 分钟。</li>
+                <li><strong>问：游戏无法加载怎么办？</strong><br />答：请确认 /games/ 目录下的 HTML 文件存在，且文件名与代码中一致。部分浏览器可能限制 iframe 加载本地文件，建议使用 Chrome 或 Edge。</li>
+                <li><strong>问：如何添加新的搜索引擎？</strong><br />答：在 index.html 的 JavaScript 中修改 <code>ENGINES</code> 对象，按格式添加即可。</li>
+                <li><strong>问：网站会被搜索引擎收录吗？</strong><br />答：已经提交了 sitemap.xml 给 Google 和 Bing，正在等待抓取和索引。</li>
+                <li><strong>问：如何提交反馈或建议？</strong><br />答：点击页面右下角的 “💬 提交建议” 按钮，选择类型并填写内容即可。</li>
+            </ul>
+        </section>
+
+        <!-- ===== 6. 更新日志（从 changelog.md 动态加载） ===== -->
+        <section class="wiki-section" id="changelog">
+            <h2>6. 📅 更新日志</h2>
+            <div id="changelog-container" class="markdown-body">
+                <div class="loading">⏳ 正在加载更新日志...</div>
+            </div>
+        </section>
+
+        <!-- 底部 -->
+        <div class="footer-area">
+            <div class="ai-credit">
+                🤖 本站部分内容由 AI 辅助生成 · 人工审核校对<br />
+                如有建议或错误，欢迎 <a href="/">提交反馈</a>
+            </div>
+            <div class="links">
+                <a href="https://github.com/yangmaoamo45/StartHere" target="_blank">
+                    <svg height="18" viewBox="0 0 16 16" width="18" style="fill:#2563eb;">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    开源地址
+                </a>
+                <span class="sep">|</span>
+                <span class="license">MIT License</span>
+            </div>
+            <div class="copyright">© 2026 yang工作室 · 用 ❤️ 打造</div>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const container = document.getElementById('changelog-container');
+
+            async function loadChangelog() {
+                try {
+                    const response = await fetch('/changelog.md');
+
+                    if (!response.ok) {
+                        throw new Error(`加载失败 (HTTP ${response.status})`);
+                    }
+
+                    const markdown = await response.text();
+
+                    if (!markdown.trim()) {
+                        container.innerHTML = '<div class="error">⚠️ changelog.md 文件为空</div>';
+                        return;
+                    }
+
+                    if (typeof marked !== 'undefined') {
+                        marked.setOptions({
+                            breaks: true,
+                            gfm: true
+                        });
+                        const html = marked.parse(markdown);
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div class="error">⚠️ Markdown 解析库未加载，请刷新页面重试</div>';
+                        console.warn('marked library not loaded');
+                    }
+
+                } catch (error) {
+                    console.error('加载 changelog.md 失败:', error);
+                    container.innerHTML = `
+                        <div class="error">
+                            ❌ 加载更新日志失败<br />
+                            <span style="font-size:14px;color:#8a9aaa;">${error.message}</span>
+                            <br /><br />
+                            <span style="font-size:13px;color:#8a9aaa;">请确认 <code>/changelog.md</code> 文件存在</span>
+                        </div>
+                    `;
                 }
-
-                const markdown = await response.text();
-
-                // 检查是否为空
-                if (!markdown.trim()) {
-                    container.innerHTML = '<div class="error">⚠️ changelog.md 文件为空</div>';
-                    return;
-                }
-
-                // 使用 marked 渲染 Markdown
-                if (typeof marked !== 'undefined') {
-                    // 配置 marked 选项
-                    marked.setOptions({
-                        breaks: true,
-                        gfm: true
-                    });
-                    const html = marked.parse(markdown);
-                    container.innerHTML = html;
-                } else {
-                    // 如果 marked 未加载，降级显示
-                    container.innerHTML = '<div class="error">⚠️ Markdown 解析库未加载，请刷新页面重试</div>';
-                    console.warn('marked library not loaded');
-                }
-
-            } catch (error) {
-                console.error('加载 changelog.md 失败:', error);
-                container.innerHTML = `
-                    <div class="error">
-                        ❌ 加载更新日志失败<br />
-                        <span style="font-size:14px;color:#8aacbc;">${error.message}</span>
-                        <br /><br />
-                        <span style="font-size:13px;color:#8aacbc;">请确认 <code>/changelog.md</code> 文件存在</span>
-                    </div>
-                `;
             }
-        }
 
-        // 页面加载完成后获取
-        if (document.readyState === 'complete') {
-            loadChangelog();
-        } else {
-            window.addEventListener('load', loadChangelog);
-        }
+            if (document.readyState === 'complete') {
+                loadChangelog();
+            } else {
+                window.addEventListener('load', loadChangelog);
+            }
 
-    })();
-</script>
+        })();
+    </script>
 
 </body>
 </html>
