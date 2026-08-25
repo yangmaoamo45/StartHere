@@ -24,7 +24,7 @@
     </script>
 
     <style>
-        /* ===== CSS 变量 ===== */
+        /* ===== CSS 变量（深色/浅色模式） ===== */
         :root {
             --bg-start: #f0f6fc;
             --bg-end: #dce8f0;
@@ -90,7 +90,6 @@
         }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ===== 顶部栏 ===== */
         .header {
             display: flex;
             align-items: center;
@@ -166,7 +165,6 @@
             border: 1px solid rgba(0,120,212,0.06);
         }
 
-        /* ===== 数据看板 ===== */
         .stats-bar {
             display: flex;
             gap: 16px;
@@ -183,7 +181,6 @@
         .stats-bar .stat-item { display: flex; align-items: center; gap: 4px; }
         .stats-bar .stat-number { font-weight: 600; color: var(--text-primary); }
 
-        /* ===== 三栏布局 ===== */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
@@ -191,7 +188,6 @@
             margin-top: 4px;
         }
 
-        /* 左栏 & 右栏 */
         .side-col {
             display: flex;
             flex-direction: column;
@@ -215,14 +211,12 @@
             gap: 6px;
         }
 
-        /* 中间栏 */
         .center-col {
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
 
-        /* 搜索框（中间突出） */
         .search-area {
             position: relative;
         }
@@ -283,7 +277,6 @@
         }
         .search-area .input-group .btn:active { transform: scale(0.96); }
 
-        /* 搜索建议 */
         .search-suggestions {
             display: none;
             background: var(--card-bg);
@@ -307,7 +300,6 @@
         }
         .search-suggestions .sug-item:hover { background: rgba(0,120,212,0.06); }
 
-        /* 搜索模式切换 */
         .search-mode-bar {
             display: flex;
             align-items: center;
@@ -336,7 +328,6 @@
             margin-left: 4px;
         }
 
-        /* URL直达（中间栏） */
         .url-row .input-group {
             display: flex;
             align-items: center;
@@ -381,7 +372,6 @@
         }
         .url-row .input-group .btn:active { transform: scale(0.96); }
 
-        /* 站内搜索结果 */
         .site-search-results {
             display: none;
             padding: 10px 14px;
@@ -430,8 +420,47 @@
             margin-left: 4px;
         }
 
-        /* ===== 左侧/右侧 组件样式 ===== */
-        /* 工具矩阵 */
+        .hot-section-center {
+            margin-top: 6px;
+        }
+        .hot-section-center .hot-header {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .hot-section-center .hot-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 8px;
+        }
+        .hot-section-center .hot-tag {
+            background: var(--tag-bg);
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .hot-section-center .hot-tag:hover {
+            background: #fff;
+            border-color: #0078d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,120,212,0.08);
+        }
+        .hot-section-center .hot-tag .tag-desc {
+            font-size: 10px;
+            color: var(--text-light);
+            margin-left: 3px;
+        }
+
         .tools-bar {
             display: flex;
             flex-wrap: wrap;
@@ -449,37 +478,6 @@
         }
         .tools-bar .tool-btn:hover { border-color: #0078d4; color: #0078d4; }
 
-        /* 热门直达 */
-        .hot-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 8px;
-        }
-        .hot-tag {
-            background: var(--tag-bg);
-            padding: 3px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            color: var(--text-primary);
-            border: 1px solid var(--border-light);
-            cursor: pointer;
-            transition: all 0.2s;
-            user-select: none;
-            white-space: nowrap;
-        }
-        .hot-tag:hover {
-            background: #fff;
-            border-color: #0078d4;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,120,212,0.08);
-        }
-        .hot-tag .tag-desc {
-            font-size: 10px;
-            color: var(--text-light);
-            margin-left: 3px;
-        }
-
-        /* 游戏中心 */
         .game-toggle-btn {
             background: linear-gradient(135deg, #f093fb, #f5576c);
             border: none;
@@ -541,7 +539,6 @@
             background: #fff;
         }
 
-        /* 天气 & 日历 */
         .weather-iframe {
             width: 100%;
             height: 150px;
@@ -627,7 +624,6 @@
         .calendar-grid .day.today { background: #0078d4; color: #fff; font-weight: 600; }
         .calendar-grid .day.other-month { color: var(--text-light); }
 
-        /* ===== 底部 ===== */
         .footer-hint {
             margin-top: 20px;
             text-align: center;
@@ -663,7 +659,6 @@
             padding-top: 10px;
         }
 
-        /* ===== 模态框 ===== */
         .tool-modal {
             display: none;
             position: fixed;
@@ -764,7 +759,6 @@
         }
         .tool-modal-content .tool-row button.secondary:hover { background: var(--input-bg); }
 
-        /* 反馈按钮 */
         .feedback-btn {
             position: fixed;
             bottom: 24px;
@@ -800,7 +794,6 @@
         }
         .view-feedback-btn:hover { background: var(--input-bg); transform: scale(1.02); }
 
-        /* ===== 响应式 ===== */
         @media (max-width: 992px) {
             .main-grid {
                 grid-template-columns: 1fr 2.2fr 1fr;
@@ -852,6 +845,7 @@
             .stats-bar { font-size: 12px; gap: 10px; }
             .feedback-btn { bottom: 14px; right: 14px; padding: 6px 14px; font-size: 12px; }
             .view-feedback-btn { bottom: 64px; right: 14px; padding: 4px 12px; font-size: 11px; }
+            .hot-section-center .hot-tag { font-size: 12px; padding: 3px 12px; }
         }
         @media (max-width: 400px) {
             .nav-card { padding: 12px 10px 12px; border-radius: 20px; }
@@ -865,7 +859,7 @@
 
     <main class="nav-card" role="main">
 
-        <!-- ===== 顶部栏 ===== -->
+        <!-- 顶部栏 -->
         <header class="header">
             <div class="logo">🧭 StartHere <span class="badge">导航</span></div>
             <div class="header-actions">
@@ -884,7 +878,7 @@
             </div>
         </header>
 
-        <!-- ===== 数据看板 ===== -->
+        <!-- 数据看板 -->
         <div class="stats-bar">
             <span class="stat-item">📚 已收录 <span class="stat-number" id="totalSites">23</span></span>
             <span class="stat-item">🆕 本周 <span class="stat-number" id="weeklyNew">3</span></span>
@@ -892,10 +886,10 @@
             <span class="stat-item">💬 反馈 <span class="stat-number" id="feedbackCount">0</span></span>
         </div>
 
-        <!-- ===== 三栏主布局 ===== -->
+        <!-- 三栏主布局 -->
         <div class="main-grid">
 
-            <!-- ========== 左栏 ========== -->
+            <!-- 左栏 -->
             <aside class="side-col">
 
                 <!-- 工具矩阵 -->
@@ -921,7 +915,7 @@
 
             </aside>
 
-            <!-- ========== 中间栏（核心） ========== -->
+            <!-- 中间栏（核心） -->
             <section class="center-col">
 
                 <!-- 搜索框 -->
@@ -954,9 +948,15 @@
                     </form>
                 </div>
 
+                <!-- 猜你想搜（中间栏底部，横向换行） -->
+                <div class="hot-section-center" id="hotSectionCenter">
+                    <div class="hot-header">🔥 猜你想搜</div>
+                    <div class="hot-tags" id="hotTagsCenter"></div>
+                </div>
+
             </section>
 
-            <!-- ========== 右栏 ========== -->
+            <!-- 右栏 -->
             <aside class="side-col">
 
                 <!-- 天气 -->
@@ -982,17 +982,11 @@
                     </div>
                 </div>
 
-                <!-- 猜你想搜 -->
-                <div class="widget-box">
-                    <h3>🔥 猜你想搜</h3>
-                    <div class="hot-tags" id="hotTags"></div>
-                </div>
-
             </aside>
 
         </div>
 
-        <!-- ===== 底部 ===== -->
+        <!-- 底部（含B站和GitHub入口） -->
         <footer class="footer-hint">
             <span>⌨️ <kbd>/</kbd> 搜索</span>
             <span class="sep">·</span>
@@ -1007,13 +1001,17 @@
             <span><a href="/fileview.html">📂 文件</a></span>
             <span class="sep">·</span>
             <span><a href="#" id="feedbackLink">💬 反馈</a></span>
+            <span class="sep">·</span>
+            <span><a href="https://space.bilibili.com/3546946251786558" target="_blank">🎮 B站</a></span>
+            <span class="sep">·</span>
+            <span><a href="https://github.com/yangmaoamo45" target="_blank">🐙 GitHub</a></span>
         </footer>
 
         <div class="copyright">© 2026 yang工作室 版权所有</div>
 
     </main>
 
-    <!-- ===== 模态框 ===== -->
+    <!-- 工具模态框 -->
     <div class="tool-modal" id="toolModal">
         <div class="tool-modal-content" id="toolModalContent">
             <div style="display:flex; align-items:center; justify-content:space-between;">
@@ -1024,7 +1022,7 @@
         </div>
     </div>
 
-    <!-- ===== 反馈按钮 ===== -->
+    <!-- 反馈按钮 -->
     <button class="feedback-btn" id="feedbackBtn">💬 建议</button>
     <button class="view-feedback-btn" id="viewFeedbackBtn">📋 反馈</button>
 
@@ -1034,9 +1032,7 @@
 
             const FEEDBACK_STORAGE_KEY = 'starthere_feedback_list';
 
-            // ================================================================
-            // 1. 深色/浅色模式
-            // ================================================================
+            // 深色/浅色模式
             const themeToggle = document.getElementById('themeToggle');
             const savedTheme = localStorage.getItem('starthere-theme');
             if (savedTheme) {
@@ -1051,9 +1047,7 @@
                 themeToggle.textContent = next === 'dark' ? '☀️' : '🌓';
             });
 
-            // ================================================================
-            // 2. 搜索建议
-            // ================================================================
+            // 搜索建议
             const searchInput = document.getElementById('searchInput');
             const suggestionsBox = document.getElementById('searchSuggestions');
             const searchSuggestions = ['百度一下', '哔哩哔哩', '抖音', '小红书', '淘宝', '腾讯视频', '爱奇艺', '网易云音乐', '汽车之家'];
@@ -1082,9 +1076,7 @@
                 }
             });
 
-            // ================================================================
-            // 3. 数据展示
-            // ================================================================
+            // 数据展示
             const totalSitesEl = document.getElementById('totalSites');
             const weeklyNewEl = document.getElementById('weeklyNew');
             const totalVisitsEl = document.getElementById('totalVisits');
@@ -1101,9 +1093,7 @@
             }
             updateFeedbackCount();
 
-            // ================================================================
-            // 4. 工具模态框
-            // ================================================================
+            // 工具模态框
             const toolModal = document.getElementById('toolModal');
             const toolModalContent = document.getElementById('toolModalContent');
             const toolModalTitle = document.getElementById('toolModalTitle');
@@ -1228,9 +1218,7 @@
                 if (e.target === toolModal) toolModal.classList.remove('active');
             });
 
-            // ================================================================
-            // 5. 反馈功能
-            // ================================================================
+            // 反馈功能
             function openFeedback() {
                 toolModal.classList.add('active');
                 toolModalTitle.textContent = '💬 提交反馈 / 修改建议';
@@ -1332,9 +1320,7 @@
                 openFeedback();
             });
 
-            // ================================================================
-            // 6. 查看反馈
-            // ================================================================
+            // 查看反馈
             document.getElementById('viewFeedbackBtn').addEventListener('click', function() {
                 const list = JSON.parse(localStorage.getItem(FEEDBACK_STORAGE_KEY) || '[]');
                 toolModal.classList.add('active');
@@ -1400,9 +1386,7 @@
                 };
             });
 
-            // ================================================================
-            // 7. 天气
-            // ================================================================
+            // 天气
             const cityInput = document.getElementById('cityIframe');
             const updateBtn = document.getElementById('updateIframe');
             const weatherIframe = document.getElementById('weatherIframe');
@@ -1416,9 +1400,7 @@
                 if (e.key === 'Enter') updateWeather();
             });
 
-            // ================================================================
-            // 8. 日历
-            // ================================================================
+            // 日历
             let currentDate = new Date();
             let currentYear = currentDate.getFullYear();
             let currentMonth = currentDate.getMonth();
@@ -1489,16 +1471,14 @@
 
             renderCalendar(currentYear, currentMonth);
 
-            // ================================================================
-            // 9. 热门链接 & 游戏
-            // ================================================================
+            // 热门链接（中间栏底部）
             const HOT_ITEMS_MAP = {
-                'CCTV1': { url: 'https://tv.cctv.com/live/cctv1/', desc: '📺 综合' },
-                'CCTV2': { url: 'https://tv.cctv.com/live/cctv2/', desc: '📊 财经' },
-                'CCTV3': { url: 'https://tv.cctv.com/live/cctv3/', desc: '🎭 综艺' },
-                'CCTV4': { url: 'https://tv.cctv.com/live/cctv4/', desc: '🌏 国际' },
-                'CCTV5': { url: 'https://tv.cctv.com/live/cctv5/', desc: '⚽ 体育' },
-                'CCTV6': { url: 'https://tv.cctv.com/live/cctv6/', desc: '🎬 电影' },
+                'CCTV1在线直播': { url: 'https://tv.cctv.com/live/cctv1/', desc: '📺 综合' },
+                'CCTV2财经': { url: 'https://tv.cctv.com/live/cctv2/', desc: '📊 财经' },
+                'CCTV3综艺': { url: 'https://tv.cctv.com/live/cctv3/', desc: '🎭 综艺' },
+                'CCTV4中文国际': { url: 'https://tv.cctv.com/live/cctv4/', desc: '🌏 国际' },
+                'CCTV5体育': { url: 'https://tv.cctv.com/live/cctv5/', desc: '⚽ 体育' },
+                'CCTV6电影': { url: 'https://tv.cctv.com/live/cctv6/', desc: '🎬 电影' },
                 '国家中小学智慧教育': { url: 'https://basic.smartedu.cn/', desc: '📚 教育' },
                 '国家法律法规数据库': { url: 'https://flk.npc.gov.cn/', desc: '⚖️ 法律' },
                 '百度一下': { url: 'https://www.baidu.com', desc: '🔍 搜索' },
@@ -1514,21 +1494,21 @@
             };
             const HOT_ITEMS = Object.keys(HOT_ITEMS_MAP);
 
-            const hotTags = document.getElementById('hotTags');
+            const hotTagsCenter = document.getElementById('hotTagsCenter');
             HOT_ITEMS.forEach(item => {
                 const info = HOT_ITEMS_MAP[item];
                 const span = document.createElement('span');
                 span.className = 'hot-tag';
                 span.innerHTML = `${item} <span class="tag-desc">${info.desc}</span>`;
                 span.dataset.url = info.url;
-                hotTags.appendChild(span);
+                hotTagsCenter.appendChild(span);
             });
-            hotTags.addEventListener('click', function(e) {
+            hotTagsCenter.addEventListener('click', function(e) {
                 const tag = e.target.closest('.hot-tag');
                 if (tag && tag.dataset.url) window.open(tag.dataset.url, '_blank');
             });
 
-            // ===== 游戏 =====
+            // 游戏
             const GAMES = [
                 { name: 'Scratch 作品', file: 'Scratch_ (1) _ (1) (1).html' },
                 { name: '作品 (3)', file: '作品_ (3) .html' },
@@ -1580,9 +1560,7 @@
             }
             gameToggleBtn.addEventListener('click', function() { toggleGameGrid(); });
 
-            // ================================================================
-            // 10. 搜索功能
-            // ================================================================
+            // 搜索功能
             const ENGINES = {
                 bing: { name: '必应', url: 'https://www.bing.com/search?q=' },
                 baidu: { name: '百度', url: 'https://www.baidu.com/s?wd=' },
@@ -1720,9 +1698,7 @@
             modeAgg.addEventListener('click', function() { setMode('agg'); });
             modeSite.addEventListener('click', function() { setMode('site'); });
 
-            // ================================================================
-            // 11. URL 直达
-            // ================================================================
+            // URL 直达
             function ensureProtocol(input) {
                 let trimmed = input.trim();
                 if (!trimmed) return null;
@@ -1762,9 +1738,7 @@
                 urlInput.value = '';
             });
 
-            // ================================================================
-            // 12. 键盘快捷键
-            // ================================================================
+            // 键盘快捷键
             document.addEventListener('keydown', function(e) {
                 const tag = e.target.tagName.toLowerCase();
                 if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
@@ -1785,9 +1759,7 @@
                 if (e.key === 'Escape') { this.value = ''; this.blur(); }
             });
 
-            // ================================================================
-            // 13. 初始化
-            // ================================================================
+            // 初始化
             setMode('web');
 
             setTimeout(() => {
@@ -1796,7 +1768,7 @@
                 }
             }, 200);
 
-            console.log('🚀 StartHere 新布局已启动');
+            console.log('🚀 StartHere 已启动');
         })();
     </script>
 
