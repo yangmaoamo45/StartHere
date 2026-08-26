@@ -187,7 +187,7 @@ text
 
 ## 👤 作者
 
-**Yang Mao**
+**Yang Mao mao**
 
 - GitHub: [@yangmaoamo45](https://github.com/yangmaoamo45)
 - B站: [杨茂茂玩游戏](https://space.bilibili.com/3546946251786558)
