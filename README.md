@@ -78,28 +78,22 @@ https://www.yang.636.ltd/
 ---
 
 📁 项目结构
-文件/目录	功能说明	技术栈
-根目录文件		
-index.html	导航首页（搜索三合一、工具矩阵、游戏中心、天气日历、深色模式、反馈系统）	HTML / CSS / JS
-about.html	关于作者（个人简介、头像、技能标签、联系方式一键复制）	HTML / CSS / JS
-wiki.html	使用指南（功能介绍、常见问题、动态加载更新日志）	HTML / CSS / JS / Marked.js
-projects.html	项目展示（开源项目列表）	HTML / CSS
-fileview.html	文件查看器（图片/文本/PDF预览、ZIP解压浏览）	HTML / CSS / JS / JSZip
-math.html	数学实验（数字黑洞、莫比乌斯环、测π、折纸指数增长）	HTML / CSS / JS / Three.js
-qr.html	二维码生成器（独立页面）	HTML / CSS / JS
-changelog.md	更新日志（wiki.html 动态加载）	Markdown
-sitemap.xml	站点地图（搜索引擎收录）	XML
-favicon.ico	站点图标	ICO
-66.png	作者头像	PNG
-CNAME	自定义域名配置（www.yang.636.ltd）	文本
-README.md	项目说明文档	Markdown
-games/ 目录		
-games/Scratch_ (1) _ (1) (1).html	Scratch 作品游戏	HTML / JS
-games/作品_ (3) .html	作品 (3) 游戏	HTML / JS
-games/几何冲刺_ (5) (1) .html	几何冲刺游戏	HTML / JS
-games/几何冲刺_ (5) (2) .html	几何冲刺 (2) 游戏	HTML / JS
-games/抽奖机 (不要赌博)_ (2) (1).html	抽奖机小游戏	HTML / JS
-games/苟活之重生.html	苟活之重生游戏	HTML / JS
+| 文件 | 路径 | 说明 |
+|------|------|------|
+| 导航首页 | / | 搜索三合一、游戏中心、工具矩阵、天气日历、深色模式、反馈系统 |
+| 关于作者 |  /about.html | 个人简介、头像、技能标签、联系方式一键复制 |
+| 使用指南 | /wiki.html | 功能介绍、常见问题、动态加载更新日志(Marked.js) |
+| 项目展示 | /projects.html | 开源项目列表展示 |
+| 文件查看器 | /fileview.html | 图片/文本/PDF预览、ZIP解压浏览（JSZip） |
+| 数学实验 | /math.html | 数字黑洞、莫比乌斯环（Three.js）、测π、折纸指数增长 |
+| 二维码生成 | /qr.html | 二维码生成器（独立页面） |
+| 更新日志 | /changelog.md | 版本更新记录，wiki.html 动态加载 |
+| 站点地图 | /sitemap.xml | 搜索引擎收录配置 |
+| 站点图标 | /favicon.ico | 浏览器标签页图标 |
+| 头像 | /66.png | 作者头像图片 |
+| 自定义域名 | /CNAME | 绑定 www.yang.636.ltd |
+| 项目说明 | /README.md | 项目文档 |
+| 游戏目录 | /games/ | 6 款 HTML 小游戏 |
 
 text
 
