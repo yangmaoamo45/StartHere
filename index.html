@@ -141,7 +141,6 @@
         }
         .theme-toggle:hover { background: var(--tag-bg); }
 
-        /* 自定义壁纸按钮 */
         .wallpaper-btn {
             background: none;
             border: none;
@@ -215,10 +214,10 @@
         }
         .add-engine-btn:hover { text-decoration: underline; }
 
-        /* ===== 每日一句 ===== */
+        /* ===== 每日一句（含彩蛋） ===== */
         .quote-bar {
             text-align: center;
-            padding: 6px 12px;
+            padding: 6px 16px;
             margin-bottom: 12px;
             font-size: 14px;
             color: var(--text-secondary);
@@ -230,6 +229,10 @@
             justify-content: center;
             gap: 8px;
             flex-wrap: wrap;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: background 0.3s;
+            user-select: none;
         }
         .quote-bar .quote-text { opacity: 0.85; }
         .quote-bar .quote-source { font-size: 12px; color: var(--text-light); font-style: normal; }
@@ -1210,7 +1213,7 @@
             </div>
         </header>
 
-        <!-- ===== 每日一句 ===== -->
+        <!-- ===== 每日一句（含彩蛋，2.5%概率触发） ===== -->
         <div class="quote-bar" id="quoteBar">
             <span class="quote-text" id="quoteText">✨ 正在加载...</span>
             <span class="quote-source" id="quoteSource"></span>
@@ -1476,12 +1479,41 @@
             });
 
             // ================================================================
-            // 3. 每日一句（一言 API）
+            // 3. 每日一句 + 彩蛋（2.5% 概率触发 + 点击触发）
             // ================================================================
             const quoteText = document.getElementById('quoteText');
             const quoteSource = document.getElementById('quoteSource');
 
+            const eggMessages = [
+                '🎉 666 · 你发现了隐藏彩蛋！',
+                '🔥 666 · 欧皇本皇！',
+                '✨ 666 · 运气爆棚！',
+                '🌟 666 · 天命之子！',
+                '💫 666 · 幸运值拉满！',
+                '⚡ 666 · 你被选中了！'
+            ];
+
+            const eggSources = [
+                '🎯 彩蛋解锁',
+                '🎯 欧气触发',
+                '🎯 隐藏成就',
+                '🎯 天命所归'
+            ];
+
+            function showEgg() {
+                const randomMsg = eggMessages[Math.floor(Math.random() * eggMessages.length)];
+                const randomSource = eggSources[Math.floor(Math.random() * eggSources.length)];
+                quoteText.textContent = randomMsg;
+                quoteSource.textContent = randomSource;
+            }
+
             async function fetchQuote() {
+                // 2.5% 概率触发彩蛋（约 40 次刷新出现 1 次）
+                if (Math.random() < 0.025) {
+                    showEgg();
+                    return;
+                }
+
                 try {
                     const response = await fetch('https://v1.hitokoto.cn/?c=d&c=k&c=i&encode=json');
                     const data = await response.json();
@@ -1492,6 +1524,17 @@
                     quoteSource.textContent = '';
                 }
             }
+
+            // 点击 quoteBar 触发彩蛋
+            document.getElementById('quoteBar').addEventListener('click', function() {
+                showEgg();
+                this.style.transition = 'background 0.3s';
+                this.style.background = 'rgba(255, 200, 50, 0.15)';
+                setTimeout(() => {
+                    this.style.background = 'transparent';
+                }, 600);
+            });
+
             fetchQuote();
 
             // ================================================================
@@ -1646,7 +1689,6 @@
                 setTimeout(() => { this.textContent = orig; }, 1500);
             });
 
-            // 自动保存（输入后延迟保存）
             let noteTimer;
             noteArea.addEventListener('input', function() {
                 clearTimeout(noteTimer);
@@ -1688,7 +1730,6 @@
                         }
                         updateDisplay();
                         updateStatus('⏹ 已停止');
-                        // 更新模式按钮
                         const minutes = Math.floor(pomodoroState.totalSeconds / 60);
                         modeBtns.forEach(b => {
                             b.classList.toggle('active', parseInt(b.dataset.minutes) === minutes);
@@ -1696,7 +1737,6 @@
                         return;
                     } catch (e) { /* ignore */ }
                 }
-                // 默认 25 分钟
                 pomodoroState.totalSeconds = 25 * 60;
                 pomodoroState.remainingSeconds = 25 * 60;
                 updateDisplay();
@@ -1734,21 +1774,17 @@
                         pomodoroStart.style.display = 'inline-block';
                         pomodoroPause.style.display = 'none';
                         updateStatus('✅ 时间到！');
-                        // 通知
                         if (Notification.permission === 'granted') {
                             new Notification('🍅 专注计时器', { body: '时间到！该休息了。' });
                         }
-                        // 页面标题闪烁
                         document.title = '⏰ 时间到！';
                         setTimeout(() => { document.title = 'StartHere·导航'; }, 3000);
                     }
-                    // 保存状态
                     localStorage.setItem(STORAGE_KEYS.pomodoro, JSON.stringify({
                         totalSeconds: pomodoroState.totalSeconds,
                         remainingSeconds: pomodoroState.remainingSeconds,
                     }));
                 }, 1000);
-                // 保存状态
                 localStorage.setItem(STORAGE_KEYS.pomodoro, JSON.stringify({
                     totalSeconds: pomodoroState.totalSeconds,
                     remainingSeconds: pomodoroState.remainingSeconds,
@@ -1805,7 +1841,6 @@
                 });
             });
 
-            // 请求通知权限
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission();
             }
@@ -1841,7 +1876,6 @@
                     a.target = '_blank';
                     a.innerHTML =
                         `${bm.name} <span class="bm-del" data-index="${index}">×</span>`;
-                    // 删除按钮事件（阻止跳转）
                     a.querySelector('.bm-del').addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -1899,7 +1933,6 @@
 
             function loadCustomEngines() {
                 const custom = JSON.parse(localStorage.getItem(STORAGE_KEYS.customEngines) || '[]');
-                // 移除已有的自定义选项
                 document.querySelectorAll('.engine-selector option.custom-engine').forEach(el => el.remove());
                 custom.forEach(engine => {
                     const opt = document.createElement('option');
@@ -1908,7 +1941,6 @@
                     opt.className = 'custom-engine';
                     engineSelect.appendChild(opt);
                 });
-                // 如果当前选中的是自定义引擎但已被删除，重置
                 const current = engineSelect.value;
                 const exists = [...engineSelect.options].some(o => o.value === current);
                 if (!exists && custom.length > 0) {
@@ -1934,7 +1966,6 @@
                 alert('✅ 自定义搜索引擎已添加！');
             });
 
-            // 获取搜索引擎 URL（含自定义）
             function getEngineUrl(engineId) {
                 const builtin = {
                     bing: 'https://www.bing.com/search?q=',
@@ -1944,7 +1975,6 @@
                     '360': 'https://www.so.com/s?q='
                 };
                 if (builtin[engineId]) return builtin[engineId];
-                // 自定义
                 const custom = JSON.parse(localStorage.getItem(STORAGE_KEYS.customEngines) || '[]');
                 const found = custom.find(e => e.id === engineId);
                 if (found) return found.url;
@@ -2648,7 +2678,7 @@
                 }
             }, 200);
 
-            console.log('🚀 StartHere 已启动（增强版）');
+            console.log('🚀 StartHere 已启动（增强版，含2.5%彩蛋）');
         })();
     </script>
 
